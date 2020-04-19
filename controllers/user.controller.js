@@ -6,6 +6,7 @@ const nodemailer = require ('nodemailer');
 const UserHash = require ('../models/userHash.model');
 const College = require ('../models/college.model');
 const Token = require ('../models/token.model');
+const Post = require ('../models/post.model');
 
 exports.signup = async function (req, res) {
   var existing = await User.findOne ({email: req.body.email});
@@ -199,10 +200,9 @@ exports.update = function (req, res) {
   if (!user) {
     res.status (404).send ({message: 'User not found'});
   } else {
-    user.update (req.body,function(err,result){
-      if(err)
-      res.status(401).send({msg:"Update Failed"})
-      res.status(200).send({msg:"User details updated successfully!"});
+    user.update (req.body, function (err, result) {
+      if (err) res.status (401).send ({msg: 'Update Failed'});
+      res.status (200).send ({msg: 'User details updated successfully!'});
     });
   }
 };
@@ -211,8 +211,75 @@ exports.feed = function (req, res) {
   //TODO
 };
 
-exports.createpost = function (req, res) {
-  //TODO
+exports.createpost = async function (req, res) {
+  let user={};
+  User.findById (req.token.user, function(err,result){
+    if(err) res.status(404).send({msg:"User not found."})
+    user=result;
+  });
+  console.log(user);
+  var post = new Post (req.body);
+  post = await post.save();
+  console.log("User is: "+user+" and Post is: "+post);
+  user.posts.push(post._id);
+  user.save(function(err,result){
+    if (err) res.status(404).send({msg:"Post could not be assigned"})
+    res.status(200).send({msg:"Posts created and assigned successfully"});
+  });
+  console.log(user);
+  // Post.create(req.body,function(err,result){
+  //   if (err) console.log ('Error creating new Post');
+  //   console.log ('New Post Created');
+    
+  //   user.posts.push (result._id);
+  //   await user.save (function (err, success) {
+  //     if (err)
+  //       res
+  //         .status (404)
+  //         .send ({msg: 'Post created but not assigned to user'});
+  //     res.status (200).send ({msg: 'Post created successfully!'});
+  //   });
+  // })
+
+
+  // Post.create (req.body)
+  //   .then (async result => {
+  //     console.log(result);
+  //     var user = User.findById (req.token.user);
+  //     user.posts.push (result._id);
+  //     await user.save (function (err, success) {
+  //       if (err)
+  //         res
+  //           .status (404)
+  //           .send ({msg: 'Post created but not assigned to user'});
+  //       res.status (200).send ({msg: 'Post created successfully!'});
+  //     });
+  //   })
+  //   .catch (err => {
+  //     res.status (401).send ({msg: 'Post could not be created.'});
+  //   });
+
+  // var post = new Post (req.body);
+  // post = await post.save (async function (err, post) {
+  //   if (err) res.status (401).send ({msg: 'Post could not be created.'});
+  //   var user = User.findById (req.token.user);
+  //   user.posts.push (post._id);
+  //   await user.save (function (err, success) {
+  //     if (err)
+  //       res.status (404).send ({msg: 'Post created but not assigned to user'});
+  //     res.status (200).send ({msg: 'Post created successfully!'});
+  //   });
+  // });
+  // assignPost = async () => {
+  //   var user = User.findById (req.token.user);
+  //   user.posts.push (post._id);
+  //   await user.save (function (err, success) {
+  //     if (err)
+  //       res.status (404).send ({msg: 'Post created but not assigned to user'});
+  //     res.status (200).send ({msg: 'Post created successfully!'});
+  //   });
+  // };
+  // assignPost();
 };
 
 exports.myposts = function (req, res) {
