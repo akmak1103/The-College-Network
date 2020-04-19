@@ -21,8 +21,8 @@ router.put("/", auth, user_controller.update)       //working
 
 router.get("/feed", auth, user_controller.feed)
 
-router.post("/post", auth, user_controller.createpost)
+router.post("/post", auth, user_controller.createpost)      //working
 
-router.get("/post", auth, user_controller.myposts)
+router.get("/post", auth, user_controller.myposts)      //working
 
 module.exports = router
