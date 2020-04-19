@@ -1,4 +1,5 @@
 const mongoose = require ('mongoose');
+mongoose.set('useFindAndModify', false);
 const User = new mongoose.Schema({
     firstName:{type:String,trim:true,default:''},
     lastName:{type:String,trim:true,default:''},
@@ -6,7 +7,8 @@ const User = new mongoose.Schema({
     email:{type:String,trim:true,default:''},
     graduation_year:{type:Number,trim:true,default:0},
     contact_number:{type:Number,trim:true,default:0},
-    password:{type:String}
+    password:{type:String},
+    isActive:{type:String,default:'false'}
 })
 
 module.exports = mongoose.model('User',User);
