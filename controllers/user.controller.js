@@ -76,7 +76,7 @@ exports.verifyUser = async function (req, res) {
     }
     User.findByIdAndUpdate (
       result.user_id,
-      {isActive: 'True'},
+      {isActive: true},
       {new: true},
       (err, user) => {
         if (err) {
@@ -92,14 +92,13 @@ exports.verifyUser = async function (req, res) {
 };
 
 function deleteHash (result) {
-  UserHash.findOneAndDelete ({user_id:result.user_id}, (err, result) => {
+  UserHash.findOneAndDelete ({user_id: result.user_id}, (err, result) => {
     if (err) console.log ('Hash could not be deleted');
     else console.log ('Hash deleted successfully!');
   });
 }
 
 exports.signin = async function (req, res) {
-  console.log ('Inside Signin');
   if (!req.body.email) {
     res.status (404);
     res.json ({
@@ -113,17 +112,22 @@ exports.signin = async function (req, res) {
         msg: 'User does not exist',
       });
     } else {
-      if (passwordHash.verify (req.body.password, user.password)) {
-        res.status (200);
-        res.json ({
-          msg: 'Signin Success',
-          data: user,
-        });
+      if (user.isActive=='true') {
+        if (passwordHash.verify (req.body.password, user.password)) {
+          res.status (200);
+          res.json ({
+            msg: 'Signin Success',
+            data: user,
+          });
+        } else {
+          res.status (401);
+          res.json ({
+            msg: 'Password does not match!',
+          });
+        }
       } else {
-        res.status (401);
-        res.json ({
-          msg: 'Password does not match!',
-        });
+        res.status (404);
+        res.json ({msg: 'Please verify your email address'});
       }
     }
   }
