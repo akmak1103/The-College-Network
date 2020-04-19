@@ -4,29 +4,23 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-//var url = "mongodb://localhost:27017/onlineshopping"; // local DATABASE
-var url = ""; //LIVE DATABASE
-const mongoose = require("mongoose");
-mongoose.Promise = global.Promise;
-// Connecting to the database
-mongoose
-  .connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log("Successfully connected to the database");
-  })
-  .catch(err => {
-    console.log("Could not connect to the database. Exiting now...", err);
-    process.exit();
-  });
+var indexRouter = require('./routes/index.route');
+var usersRouter = require('./routes/user.route');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
