@@ -4,6 +4,7 @@ var passwordHash = require ('password-hash');
 var crypto = require ('crypto');
 const nodemailer = require ('nodemailer');
 const UserHash = require ('../models/userHash.model');
+const College = require ('../models/college.model');
 
 exports.signup = async function (req, res) {
   var existing = await User.findOne ({email: req.body.email});
@@ -31,6 +32,9 @@ exports.signup = async function (req, res) {
         .catch (err => {
           console.log ('Error creating Hash');
         });
+      console.log (req.body.email);
+      console.log (user._id);
+      checkCollege (req.body.email, user._id);
       sendEmail (verification_hash, req.body.email);
       res.status (200);
       res.json ({
@@ -41,6 +45,33 @@ exports.signup = async function (req, res) {
   }
 };
 
+function checkCollege (email, userid) {
+  console.log (email);
+  console.log (userid);
+  var mail = '';
+  mail = email;
+  collegeName = mail.slice ((mail.indexOf('@')+1), mail.length - 4);
+  console.log (collegeName);
+  College.findOne ({name: collegeName}, async function (err, college) {
+    if (err) console.log ('Error finding college');
+    if (college == null) {
+      College.create ({name: collegeName, students: [userid]}, function (
+        err,
+        result
+      ) {
+        if (err) console.log ('Error creating new College');
+        console.log ('New college Created');
+      });
+    } else {
+      college.students.push (userid);
+      await college.save (function (err, result) {
+        if (err) console.log ('Error updating the colllege');
+        console.log ('Student Added in existing college');
+        console.log ('Student added in already existing college' + result);
+      });
+    }
+  });
+}
 function sendEmail (hash, email) {
   let smtpTransport = nodemailer.createTransport ({
     service: 'Gmail',
@@ -112,7 +143,7 @@ exports.signin = async function (req, res) {
         msg: 'User does not exist',
       });
     } else {
-      if (user.isActive=='true') {
+      if (user.isActive == 'true') {
         if (passwordHash.verify (req.body.password, user.password)) {
           res.status (200);
           res.json ({
