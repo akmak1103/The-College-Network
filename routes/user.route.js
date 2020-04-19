@@ -3,21 +3,21 @@ const router = express.Router()
 const user_controller = require("../controllers/user.controller")
 const auth = require("../middleware/auth")
 
-router.post("/signup", user_controller.signup)
+router.post("/signup", user_controller.signup)  //working
 
-router.put("/verify/:hash",user_controller.verifyUser)
+router.put("/verify/:hash",user_controller.verifyUser)      //working
 
-router.post("/signin", user_controller.signin)
+router.post("/signin", user_controller.signin)      //working
 
-router.post("/signout", auth, user_controller.signout)
+router.post("/signout", auth, user_controller.signout)      //working
 
-router.post("/signoutall", auth, user_controller.signoutall)
+router.post("/signoutall", auth, user_controller.signoutall)        //working
 
 router.post("/resetpassword", auth, user_controller.resetPass)
 
-router.get("/", auth, user_controller.dashboard)
+router.get("/", auth, user_controller.dashboard)    //working
 
-router.put("/", auth, user_controller.update)
+router.put("/", auth, user_controller.update)       //working
 
 router.get("/feed", auth, user_controller.feed)
 

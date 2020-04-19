@@ -1,13 +1,14 @@
 const express = require("express")
 const router = express.Router()
 const post_controller = require("../controllers/post.controller")
+const auth = require("../middleware/auth")
 
-router.put("/like", post_controller.like)
+router.put("/like",auth, post_controller.like)
 
-router.put("/comment", post_controller.comment)
+router.put("/comment",auth, post_controller.comment)
 
-router.put("/share", post_controller.share)
+router.put("/share",auth, post_controller.share)
 
-router.put("/save", post_controller.save)
+router.put("/save",auth, post_controller.save)
 
 module.exports = router

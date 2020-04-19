@@ -5,6 +5,7 @@ var crypto = require ('crypto');
 const nodemailer = require ('nodemailer');
 const UserHash = require ('../models/userHash.model');
 const College = require ('../models/college.model');
+const Token = require ('../models/token.model');
 
 exports.signup = async function (req, res) {
   var existing = await User.findOne ({email: req.body.email});
@@ -50,7 +51,7 @@ function checkCollege (email, userid) {
   console.log (userid);
   var mail = '';
   mail = email;
-  collegeName = mail.slice ((mail.indexOf('@')+1), mail.length - 4);
+  collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4);
   console.log (collegeName);
   College.findOne ({name: collegeName}, async function (err, college) {
     if (err) console.log ('Error finding college');
@@ -109,13 +110,16 @@ exports.verifyUser = async function (req, res) {
       result.user_id,
       {isActive: true},
       {new: true},
-      (err, user) => {
+      async (err, user) => {
         if (err) {
           res
             .status (500)
             .send ({msg: 'Error occured while updating user document'});
         }
         deleteHash (result);
+        var token = new Token ({user: result.user_id});
+        token = await token.save ();
+        res.header ('authorization', token._id);
         res.send ({msg: 'Account verified', user: user});
       }
     );
@@ -145,8 +149,11 @@ exports.signin = async function (req, res) {
     } else {
       if (user.isActive == 'true') {
         if (passwordHash.verify (req.body.password, user.password)) {
+          var token = new Token ({user: user._id});
+          token = await token.save ();
+          res.header ('authorization', token._id);
           res.status (200);
-          res.json ({
+          res.send ({
             msg: 'Signin Success',
             data: user,
           });
@@ -164,24 +171,40 @@ exports.signin = async function (req, res) {
   }
 };
 
-exports.signout = function (req, res) {
-  //TODO
+exports.signout = async function (req, res) {
+  var token = await Token.findByIdAndDelete (req.headers['authorization']);
+  console.log (token);
+  res.status (200).send ({msg: 'Signout success'});
 };
 
-exports.signoutall = function (req, res) {
-  //TODO
+exports.signoutall = async function (req, res) {
+  var tokens = await Token.deleteMany ({user: req.token.user});
+  console.log (tokens);
+  res.status (200).send ({message: 'Signout all success'});
 };
 
 exports.resetPass = function (req, res) {
   //TODO
 };
 
-exports.dashboard = function (req, res) {
-  //TODO
+exports.dashboard = async function (req, res) {
+  var user = await User.findById (req.token.user).populate ('posts');
+  if (!user) {
+    res.status (404).send ({message: 'User not found'});
+  } else res.status (200).send (user);
 };
 
 exports.update = function (req, res) {
-  //TODO
+  var user = User.findById (req.token.user);
+  if (!user) {
+    res.status (404).send ({message: 'User not found'});
+  } else {
+    user.update (req.body,function(err,result){
+      if(err)
+      res.status(401).send({msg:"Update Failed"})
+      res.status(200).send({msg:"User details updated successfully!"});
+    });
+  }
 };
 
 exports.feed = function (req, res) {

@@ -8,7 +8,8 @@ const User = new mongoose.Schema({
     graduation_year:{type:Number,trim:true,default:0},
     contact_number:{type:Number,trim:true,default:0},
     password:{type:String},
-    isActive:{type:String,default:'false'}
+    isActive:{type:String,default:'false'},
+    posts:[mongoose.Schema.Types.ObjectId]
 })
 
 module.exports = mongoose.model('User',User);
