@@ -8,3 +8,8 @@ exports.signupPage = function (req,res)
 {
   res.render('signup');
 }
+
+exports.signinPage = function (req,res)
+{
+  res.render('signin');
+}
