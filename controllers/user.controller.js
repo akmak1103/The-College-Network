@@ -17,7 +17,7 @@ exports.signup = async function (req, res) {
   } else {
     var hashedPassword = passwordHash.generate (req.body.password);
     req.body.password = hashedPassword;
-    User.create (req.body, function (err, user) {
+    User.create (req.body, async function (err, user) {
       if (err)
         res.json ({
           msg: 'Error in creating Account. Please try again',
@@ -29,14 +29,30 @@ exports.signup = async function (req, res) {
         .digest ('hex');
       UserHash.create ({user_id: user._id, hash: verification_hash})
         .then (userhash => {
-          console.log ('Hash generated and saved in DB');
+          //console.log ('Hash generated and saved in DB');
         })
         .catch (err => {
           console.log ('Error creating Hash');
         });
-      console.log (req.body.email);
-      console.log (user._id);
-      checkCollege (req.body.email, user._id);
+      var mail = '';
+      mail = req.body.email;
+      collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4);   //extracts 'ncuindia' from the email address
+      await College.findOne ({name: collegeName},async function (err, college_DB) {
+        if (err) console.log ('Error finding college');
+        if (college_DB == null) {
+          await College.create ({name: collegeName}, function (err, result) {
+            if (err) console.log ('Error creating new College');
+            console.log ('New college Created: ' + result);
+            user.update ({college: result});
+          });
+        } else {
+          user.updateOne({college: college_DB}).exec(function(err,result){
+            if (err) console.log("!!!! Error in updating the user !!!!")
+            console.log("------- USER UPDATED SUCCESSFULLY ------------"+college_DB);
+          });
+        }
+      });
+      console.log(user.college);
       sendEmail (verification_hash, req.body.email);
       res.status (200);
       res.json ({
@@ -47,33 +63,26 @@ exports.signup = async function (req, res) {
   }
 };
 
-function checkCollege (email, userid) {
-  console.log (email);
-  console.log (userid);
-  var mail = '';
-  mail = email;
-  collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4);
-  console.log (collegeName);
-  College.findOne ({name: collegeName}, async function (err, college) {
-    if (err) console.log ('Error finding college');
-    if (college == null) {
-      College.create ({name: collegeName, students: [userid]}, function (
-        err,
-        result
-      ) {
-        if (err) console.log ('Error creating new College');
-        console.log ('New college Created');
-      });
-    } else {
-      college.students.push (userid);
-      await college.save (function (err, result) {
-        if (err) console.log ('Error updating the colllege');
-        console.log ('Student Added in existing college');
-        console.log ('Student added in already existing college' + result);
-      });
-    }
-  });
-}
+// async function checkCollege (email, userid) {
+//   var mail = '';
+//   mail = email;
+//   collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4);
+//   console.log ("String manipulation: "+collegeName);
+//   await College.findOne ({name: collegeName}, async function (err, college) {
+//     if (err) console.log ('Error finding college');
+//     if (college == null) {
+//       await College.create ({name: collegeName}, function (err, result) {
+//         if (err) console.log ('Error creating new College');
+//         console.log ('New college Created: ' + result);
+//         return result;
+//       });
+//     } else {
+//       console.log ("Old College: "+college);
+//       return college;
+//     }
+//   });
+// }
+
 function sendEmail (hash, email) {
   let smtpTransport = nodemailer.createTransport ({
     service: 'Gmail',
@@ -95,7 +104,7 @@ function sendEmail (hash, email) {
     if (err) {
       console.log (err);
     } else {
-      console.log ('Verification Email Sent');
+      //console.log ('Verification Email Sent');
     }
   });
 }
@@ -189,7 +198,7 @@ exports.resetPass = function (req, res) {
 };
 
 exports.dashboard = async function (req, res) {
-  var user = await User.findById (req.token.user).populate ('posts');
+  var user = await User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});
   } else res.status (200).send (user);
@@ -208,86 +217,20 @@ exports.update = function (req, res) {
 };
 
 exports.feed = function (req, res) {
-  //TODO
+  // User.find({college:user.college})
 };
 
 exports.createpost = async function (req, res) {
-  let user = {};
-  User.findById (req.token.user, function (err, result) {
-    if (err) res.status (404).send ({msg: 'User not found.'});
-    user = result;
+  req.body.postedBy = req.token.user;
+  Post.create (req.body, function (err, result) {
+    if (err) res.status (500).send ({msg: 'Post not created.'});
+    res.status (200).send ({msg: 'Post created', post: result});
   });
-  console.log (user);
-  var post = new Post (req.body);
-  post = await post.save ();
-  console.log ('User is: ' + user + ' and Post is: ' + post);
-  user.posts.push (post._id);
-  user.save (function (err, result) {
-    if (err) res.status (404).send ({msg: 'Post could not be assigned'});
-    res.status (200).send ({msg: 'Posts created and assigned successfully'});
-  });
-  console.log (user);
-  // Post.create(req.body,function(err,result){
-  //   if (err) console.log ('Error creating new Post');
-  //   console.log ('New Post Created');
-
-  //   user.posts.push (result._id);
-  //   await user.save (function (err, success) {
-  //     if (err)
-  //       res
-  //         .status (404)
-  //         .send ({msg: 'Post created but not assigned to user'});
-  //     res.status (200).send ({msg: 'Post created successfully!'});
-  //   });
-  // })
-
-  // Post.create (req.body)
-  //   .then (async result => {
-  //     console.log(result);
-  //     var user = User.findById (req.token.user);
-  //     user.posts.push (result._id);
-  //     await user.save (function (err, success) {
-  //       if (err)
-  //         res
-  //           .status (404)
-  //           .send ({msg: 'Post created but not assigned to user'});
-  //       res.status (200).send ({msg: 'Post created successfully!'});
-  //     });
-  //   })
-  //   .catch (err => {
-  //     res.status (401).send ({msg: 'Post could not be created.'});
-  //   });
-
-  // var post = new Post (req.body);
-  // post = await post.save (async function (err, post) {
-  //   if (err) res.status (401).send ({msg: 'Post could not be created.'});
-  //   var user = User.findById (req.token.user);
-  //   user.posts.push (post._id);
-  //   await user.save (function (err, success) {
-  //     if (err)
-  //       res.status (404).send ({msg: 'Post created but not assigned to user'});
-  //     res.status (200).send ({msg: 'Post created successfully!'});
-  //   });
-  // });
-  // assignPost = async () => {
-  //   var user = User.findById (req.token.user);
-  //   user.posts.push (post._id);
-  //   await user.save (function (err, success) {
-  //     if (err)
-  //       res.status (404).send ({msg: 'Post created but not assigned to user'});
-  //     res.status (200).send ({msg: 'Post created successfully!'});
-  //   });
-  // };
-  // assignPost();
 };
 
 exports.myposts = function (req, res) {
-  User.findById (req.token.user, function (err, result) {
-    if (err) res.status (404).send ({msg: 'User not found.'});
-    console.log(result);
-    Post.find ().where ('_id').in (result.posts).exec (function (err, myPosts) {
-      if(err) res.status(404).send({msg:"Posts could not be found!"})
-      res.status(200).send({msg:"Posts of current user:",posts:myPosts});
-    });
+  Post.find ({postedBy: req.token.user}).exec (function (err, records) {
+    if (err) res.status (404).send ({msg: 'Posts could not be found!'});
+    res.status (200).send ({msg: 'Posts of current user:', posts: records});
   });
 };

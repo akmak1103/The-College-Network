@@ -3,6 +3,7 @@ mongoose.set('useFindAndModify', false);
 typeOfData = mongoose.Schema.Types.String;
 typeOfAuthor = mongoose.Schema.Types.ObjectId;
 const Post = new mongoose.Schema({
+    postedBy:{type:mongoose.Schema.Types.ObjectId,ref:'User'},
     caption:{type:String,trim:true,default:''},
     image:{type:String,},
     video:{type:String,},
@@ -10,8 +11,8 @@ const Post = new mongoose.Schema({
     likes:{type:Number,default:0},
     comments:[
         {
-            author:{typeOfAuthor},
-            data:{typeOfData}
+            author:{type:mongoose.Schema.Types.ObjectId,ref:'User'},
+            data:{type:mongoose.Schema.Types.String}
         }
     ],
 })
