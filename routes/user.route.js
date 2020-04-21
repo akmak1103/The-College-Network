@@ -13,7 +13,7 @@ router.post("/signout", auth, user_controller.signout)              //working
 
 router.post("/signoutall", auth, user_controller.signoutall)        //working
 
-router.post("/resetpassword", auth, user_controller.resetPass)
+router.post("/changePassword", auth, user_controller.changePass)    //working
 
 router.get("/", auth, user_controller.dashboard)                    //working
 
