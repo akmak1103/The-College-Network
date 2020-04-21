@@ -7,12 +7,9 @@ const User = new mongoose.Schema({
     email:{type:String,trim:true,default:''},
     graduation_year:{type:Number,trim:true,default:0},
     contact_number:{type:Number,trim:true,default:0},
-    college:{
-        name:{type:String},
-        id:{type:mongoose.Schema.Types.ObjectId,ref:'College'}
-    },
+    college_name:{type:String},
     password:{type:String},
-    isActive:{type:String,default:'false'},
+    isActive:{type:Boolean,default:false},
 })
 
 module.exports = mongoose.model('User',User);

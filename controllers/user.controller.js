@@ -29,30 +29,41 @@ exports.signup = async function (req, res) {
         .digest ('hex');
       UserHash.create ({user_id: user._id, hash: verification_hash})
         .then (userhash => {
-          //console.log ('Hash generated and saved in DB');
+          console.log ('Hash generated and saved in DB');
         })
         .catch (err => {
           console.log ('Error creating Hash');
         });
       var mail = '';
       mail = req.body.email;
-      collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4);   //extracts 'ncuindia' from the email address
-      await College.findOne ({name: collegeName},async function (err, college_DB) {
+      collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4); //extracts 'ncuindia' from the email address
+      user
+        .updateOne ({college_name: collegeName})
+        .exec (function (err, result) {
+          if (err) console.log ('!!!! Error in updating the user !!!!');
+          console.log (
+            '------- USER UPDATED SUCCESSFULLY ------------' + collegeName
+          );
+        });
+      await College.findOne ({name: collegeName}, async function (
+        err,
+        college_DB
+      ) {
         if (err) console.log ('Error finding college');
         if (college_DB == null) {
           await College.create ({name: collegeName}, function (err, result) {
             if (err) console.log ('Error creating new College');
             console.log ('New college Created: ' + result);
-            user.update ({college: result});
+            //user.update ({college: result});
           });
-        } else {
-          user.updateOne({college: college_DB}).exec(function(err,result){
-            if (err) console.log("!!!! Error in updating the user !!!!")
-            console.log("------- USER UPDATED SUCCESSFULLY ------------"+college_DB);
-          });
+          // } else {
+          //   user.updateOne({college: college_DB}).exec(function(err,result){
+          //     if (err) console.log("!!!! Error in updating the user !!!!")
+          //     console.log("------- USER UPDATED SUCCESSFULLY ------------"+college_DB);
+          //   });
         }
       });
-      console.log(user.college);
+      console.log (user.college_name);
       sendEmail (verification_hash, req.body.email);
       res.status (200);
       res.json ({
@@ -157,7 +168,7 @@ exports.signin = async function (req, res) {
         msg: 'User does not exist',
       });
     } else {
-      if (user.isActive == 'true') {
+      if (user.isActive) {
         if (passwordHash.verify (req.body.password, user.password)) {
           var token = new Token ({user: user._id});
           token = await token.save ();
