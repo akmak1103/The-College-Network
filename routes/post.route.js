@@ -7,8 +7,6 @@ router.put("/like/:id",auth, post_controller.like)
 
 router.post("/comment/:id",auth, post_controller.comment)
 
-router.put("/share",auth, post_controller.share)
-
-router.put("/save",auth, post_controller.save)
+router.put("/save/:id",auth, post_controller.save)
 
 module.exports = router

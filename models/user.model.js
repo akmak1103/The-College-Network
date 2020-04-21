@@ -10,6 +10,7 @@ const User = new mongoose.Schema({
     college_name:{type:String},
     password:{type:String},
     isActive:{type:Boolean,default:false},
+    savedPosts:[{type:mongoose.Schema.Types.ObjectId,ref:'Post'}]
 })
 
 module.exports = mongoose.model('User',User);
