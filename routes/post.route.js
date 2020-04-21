@@ -3,7 +3,7 @@ const router = express.Router()
 const post_controller = require("../controllers/post.controller")
 const auth = require("../middleware/auth")
 
-router.put("/like",auth, post_controller.like)
+router.put("/like/:id",auth, post_controller.like)
 
 router.put("/comment",auth, post_controller.comment)
 

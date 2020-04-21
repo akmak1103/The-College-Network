@@ -19,7 +19,7 @@ router.get("/", auth, user_controller.dashboard)                    //working
 
 router.put("/", auth, user_controller.update)                       //working
 
-router.get("/feed", auth, user_controller.feed)
+router.get("/feed", auth, user_controller.feed)                     //working
 
 router.post("/post", auth, user_controller.createpost)              //working
 
