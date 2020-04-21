@@ -5,6 +5,7 @@ const User = require ('../models/user.model');
 exports.like = function (req, res) {
   Post.findById (req.params.id).exec (function (err, post) {
     if (err) res.status (404).send (err);
+    //update the 'likes' field of fetched
     post.update ({likes: post.likes + 1}).exec (function (err, liked) {
       if (err) res.status (500).send (err);
       res.status (200).send ({msg: 'Liked'});
@@ -13,13 +14,9 @@ exports.like = function (req, res) {
 };
 
 exports.comment = function (req, res) {
-  const comment = req.body;
-  console.log (comment);
   Post.findById (req.params.id).exec (async function (err, post) {
     if (err) res.status (404).send (err);
-    console.log ('Post is: ' + post);
-    console.log ('User: ' + req.token.user + ' Comment: ' + req.body.data);
-    post.comments.push ({author: req.token.user, data: req.body.data});
+    post.comments.push ({author: req.token.user, data: req.body.data});     //push the new comment document in comments array of the post
     await post.save (function (err, result) {
       if (err) res.status (500).send (err);
       res.status (200).send ({msg: 'Comment posted'});
@@ -28,8 +25,8 @@ exports.comment = function (req, res) {
 };
 
 exports.save = function (req, res) {
-  var user = User.findById (req.token.user, async function (err, user) {
-    user.savedPosts.push (req.params.id);
+  User.findById (req.token.user, async function (err, user) {
+    user.savedPosts.push (req.params.id);       //push the id of post in savedPosts array
     await user.save (function (err, result) {
       if (err) res.status (500).send (err);
       res.status (200).send ({msg: 'Post Saved'});

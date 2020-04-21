@@ -168,7 +168,7 @@ exports.signout = async function (req, res) {
 };
 
 exports.signoutall = async function (req, res) {
-  var tokens = await Token.deleteMany ({user: req.token.user});
+  var tokens = await Token.deleteMany ({user: req.token.user});   //signout user from all the devices
   console.log (tokens);
   res.status (200).send ({message: 'Signout all success'});
 };
@@ -181,7 +181,7 @@ exports.dashboard = async function (req, res) {
   var user = await User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});
-  } else res.status (200).send (user);
+  } else res.status (200).send (user);        //retrieve user details
 };
 
 exports.update = function (req, res) {
@@ -189,6 +189,7 @@ exports.update = function (req, res) {
   if (!user) {
     res.status (404).send ({message: 'User not found'});
   } else {
+    //update the details of user which have been changed
     user.update (req.body, function (err, result) {
       if (err) res.status (401).send ({msg: 'Update Failed'});
       res.status (200).send ({msg: 'User details updated successfully!'});
@@ -197,17 +198,18 @@ exports.update = function (req, res) {
 };
 
 exports.feed = function (req, res) {
-  // find all the posts 'postedBy' users having "college_name:token.user.college_name"
+
+  // find all the posts 'postedBy' users having "college_name:current_user.college_name"
 
   User.findById ({_id: req.token.user})
     .then (current_user => {
       User.find ({college_name: current_user.college_name})
-        .select ('_id')
+        .select ('_id')         //only fetch unique id of matching users
         .exec (function (err, userArray) {
           if (err) console.log (err);
           //res.send(userArray);
           Post.find ({postedBy: {$in: userArray}})
-            .sort ({updatedAt: -1})
+            .sort ({updatedAt: -1})           //sort posts by latest updated time
             .exec (function (err, allPosts) {
               if (err) res.send (err);
               res.send (allPosts);
