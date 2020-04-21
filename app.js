@@ -10,7 +10,7 @@ var indexRouter = require ('./routes/index.route');
 var usersRouter = require ('./routes/user.route');
 var postRouter = require ('./routes/post.route');
 
-var url = process.env.DB_URL;
+var url = process.env.DB_URL;   //Database URL configured in .env file
 const mongoose = require ('mongoose');
 mongoose.Promise = global.Promise;
 mongoose
@@ -30,7 +30,7 @@ var app = express ();
 
 // view engine setup
 app.set ('views', path.join (__dirname, 'views'));
-app.set ('view engine', 'hbs');
+app.set ('view engine', 'hbs');   //template engine set as handlebars (hbs)
 
 app.use (logger ('dev'));
 app.use (express.json ());

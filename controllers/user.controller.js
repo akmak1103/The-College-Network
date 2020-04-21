@@ -1,8 +1,8 @@
 const User = require ('../models/user.model');
 const http = require ('http');
 var passwordHash = require ('password-hash');
-var crypto = require ('crypto');
-const nodemailer = require ('nodemailer');
+var crypto = require ('crypto'); //node module to create hashes
+const nodemailer = require ('nodemailer'); //package to allow email functionality
 const UserHash = require ('../models/userHash.model');
 const College = require ('../models/college.model');
 const Token = require ('../models/token.model');
@@ -11,59 +11,51 @@ const Post = require ('../models/post.model');
 exports.signup = async function (req, res) {
   var existing = await User.findOne ({email: req.body.email});
   if (existing != null) {
-    console.log ('Email ID already exists');
     res.send ({msg: 'Email ID already exists'});
-    res.status (406);
+    res.status (409); //conflict
   } else {
-    var hashedPassword = passwordHash.generate (req.body.password);
-    req.body.password = hashedPassword;
+    var hashedPassword = passwordHash.generate (req.body.password); //generate corresponding password hash to be stored in DB
+    req.body.password = hashedPassword; //set password received in body to hashed password
+
+    //extract 'ncuindia' from example@ncuindia.edu and set it as user's college
+    var mail = '';
+    mail = req.body.email;
+    collegeName = mail.slice (
+      mail.indexOf ('@') + 1,
+      mail.length - 4
+    );
+    req.body.college_name = collegeName;
+
+    await College.findOne ({name: collegeName}, async function (
+      err,
+      college_DB
+    ) {
+      if (err) console.log ('Error finding college');
+      if (college_DB == null) {
+        await College.create ({name: collegeName}, function (err, result) {
+          if (err) console.log ('Error creating new College');
+          console.log ('New college Created: ' + result);
+        });
+      }
+    });
+
     User.create (req.body, async function (err, user) {
       if (err)
-        res.json ({
+        res.status (500).send ({
           msg: 'Error in creating Account. Please try again',
           error: err,
         });
       verification_hash = crypto
         .createHash ('sha256')
         .update (user._id.toString (), 'utf8')
-        .digest ('hex');
+        .digest ('hex'); //generate a sha256 hash based on user._id for email verification
       UserHash.create ({user_id: user._id, hash: verification_hash})
         .then (userhash => {
-          console.log ('Hash generated and saved in DB');
+          console.log ('Hash generated and saved in DB'); //save hash in database
         })
         .catch (err => {
           console.log ('Error creating Hash');
         });
-      var mail = '';
-      mail = req.body.email;
-      collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4); //extracts 'ncuindia' from the email address
-      user
-        .updateOne ({college_name: collegeName})
-        .exec (function (err, result) {
-          if (err) console.log ('!!!! Error in updating the user !!!!');
-          console.log (
-            '------- USER UPDATED SUCCESSFULLY ------------' + collegeName
-          );
-        });
-      await College.findOne ({name: collegeName}, async function (
-        err,
-        college_DB
-      ) {
-        if (err) console.log ('Error finding college');
-        if (college_DB == null) {
-          await College.create ({name: collegeName}, function (err, result) {
-            if (err) console.log ('Error creating new College');
-            console.log ('New college Created: ' + result);
-            //user.update ({college: result});
-          });
-          // } else {
-          //   user.updateOne({college: college_DB}).exec(function(err,result){
-          //     if (err) console.log("!!!! Error in updating the user !!!!")
-          //     console.log("------- USER UPDATED SUCCESSFULLY ------------"+college_DB);
-          //   });
-        }
-      });
-      console.log (user.college_name);
       sendEmail (verification_hash, req.body.email);
       res.status (200);
       res.json ({
@@ -74,32 +66,12 @@ exports.signup = async function (req, res) {
   }
 };
 
-// async function checkCollege (email, userid) {
-//   var mail = '';
-//   mail = email;
-//   collegeName = mail.slice (mail.indexOf ('@') + 1, mail.length - 4);
-//   console.log ("String manipulation: "+collegeName);
-//   await College.findOne ({name: collegeName}, async function (err, college) {
-//     if (err) console.log ('Error finding college');
-//     if (college == null) {
-//       await College.create ({name: collegeName}, function (err, result) {
-//         if (err) console.log ('Error creating new College');
-//         console.log ('New college Created: ' + result);
-//         return result;
-//       });
-//     } else {
-//       console.log ("Old College: "+college);
-//       return college;
-//     }
-//   });
-// }
-
 function sendEmail (hash, email) {
   let smtpTransport = nodemailer.createTransport ({
     service: 'Gmail',
     auth: {
-      user: process.env.SENDER_EMAIL,
-      pass: process.env.SENDER_EMAIL_PASS,
+      user: process.env.SENDER_EMAIL, //configured in .env file
+      pass: process.env.SENDER_EMAIL_PASS, //configured in .env file
     },
   });
 
@@ -115,7 +87,7 @@ function sendEmail (hash, email) {
     if (err) {
       console.log (err);
     } else {
-      //console.log ('Verification Email Sent');
+      console.log ('Verification Email Sent');
     }
   });
 }
@@ -129,7 +101,7 @@ exports.verifyUser = async function (req, res) {
     }
     User.findByIdAndUpdate (
       result.user_id,
-      {isActive: true},
+      {isActive: true}, //verifies user
       {new: true},
       async (err, user) => {
         if (err) {
@@ -138,10 +110,10 @@ exports.verifyUser = async function (req, res) {
             .send ({msg: 'Error occured while updating user document'});
         }
         deleteHash (result);
-        var token = new Token ({user: result.user_id});
+        var token = new Token ({user: result.user_id}); //generate token for session management
         token = await token.save ();
-        res.header ('authorization', token._id);
-        res.send ({msg: 'Account verified', user: user});
+        res.header ('authorization', token._id); //send token as header
+        res.status (200).send ({msg: 'Account verified', user: user});
       }
     );
   });
@@ -185,7 +157,7 @@ exports.signin = async function (req, res) {
           });
         }
       } else {
-        res.status (404);
+        res.status (401);
         res.json ({msg: 'Please verify your email address'});
       }
     }
