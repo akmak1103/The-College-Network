@@ -15,6 +15,8 @@ const Post = new mongoose.Schema({
             data:{type:mongoose.Schema.Types.String}
         }
     ],
-})
+},
+{timestamps:true}
+)
 
 module.exports = mongoose.model('Post',Post);

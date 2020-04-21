@@ -200,27 +200,23 @@ exports.feed = function (req, res) {
   // find all the posts 'postedBy' users having "college_name:token.user.college_name"
 
   User.findById ({_id: req.token.user})
-  .then (current_user => {
-    User.find({college_name:current_user.college_name}).select('_id').exec(function(err,userArray){
-      if (err) console.log(err)
-      //res.send(userArray);
-      Post.find({postedBy:{$in:userArray}},function(err,allPosts){
-        if (err) res.send(err)
-        res.send(allPosts);
-      })
+    .then (current_user => {
+      User.find ({college_name: current_user.college_name})
+        .select ('_id')
+        .exec (function (err, userArray) {
+          if (err) console.log (err);
+          //res.send(userArray);
+          Post.find ({postedBy: {$in: userArray}})
+            .sort ({updatedAt: -1})
+            .exec (function (err, allPosts) {
+              if (err) res.send (err);
+              res.send (allPosts);
+            });
+        });
     })
-  })
-  .catch (err => {
-    console.log(err);
-  });
-
-  // User.find ({college_name: req.token.user.college_name}, function (
-  //   err,
-  //   result
-  // ) {
-  //   if (err) console.log (err);
-  //   console.log (result);
-  // });
+    .catch (err => {
+      console.log (err);
+    });
 };
 
 exports.createpost = async function (req, res) {
