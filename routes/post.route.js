@@ -5,7 +5,7 @@ const auth = require("../middleware/auth")
 
 router.put("/like/:id",auth, post_controller.like)
 
-router.put("/comment",auth, post_controller.comment)
+router.post("/comment/:id",auth, post_controller.comment)
 
 router.put("/share",auth, post_controller.share)
 
