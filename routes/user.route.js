@@ -5,7 +5,7 @@ const auth = require("../middleware/auth")
 
 router.post("/signup", user_controller.signup)                      //working
 
-router.put("/verify/:hash",user_controller.verifyUser)              //working
+router.get("/verify/:hash",user_controller.verifyUser)              //working
 
 router.post("/signin", user_controller.signin)                      //working
 
