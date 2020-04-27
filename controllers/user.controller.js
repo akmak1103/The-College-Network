@@ -11,8 +11,11 @@ const Post = require ('../models/post.model');
 exports.signup = async function (req, res) {
   var existing = await User.findOne ({email: req.body.email});
   if (existing != null) {
-    res.send ({msg: 'Email ID already exists'});
-    res.status (409); //conflict
+    console.log ('Email match');
+    res.status (409);
+    res.json ({
+      msg: 'Email ID already exists',
+    });
   } else {
     var hashedPassword = passwordHash.generate (req.body.password); //generate corresponding password hash to be stored in DB
     req.body.password = hashedPassword; //set password received in body to hashed password
@@ -56,7 +59,7 @@ exports.signup = async function (req, res) {
       sendEmail (verification_hash, req.body.email);
       res.status (200);
       res.json ({
-        msg: 'Account Created Successfully',
+        msg: 'Account Created Successfully. Verification Email Sent!',
         data: user,
       });
     });
@@ -107,10 +110,7 @@ exports.verifyUser = async function (req, res) {
             .send ({msg: 'Error occured while updating user document'});
         }
         deleteHash (result);
-        var token = new Token ({user: result.user_id}); //generate token for session management
-        token = await token.save ();
-        res.header ('authorization', token._id); //send token as header
-        res.status (200).send ({msg: 'Account verified', user: user});
+        res.redirect('/signin');
       }
     );
   });
@@ -175,8 +175,8 @@ exports.signoutall = async function (req, res) {
 
 exports.changePass = async function (req, res) {
   let user = await User.findById (req.token.user);
-  console.log(user.password);
-  console.log(passwordHash.generate(req.body.new_password))
+  console.log (user.password);
+  console.log (passwordHash.generate (req.body.new_password));
   if (!user) res.status (404).send ({msg: 'Account does not exist.'});
   if (passwordHash.verify (req.body.old_password, user.password))
     User.findByIdAndUpdate (
@@ -195,7 +195,7 @@ exports.changePass = async function (req, res) {
 };
 
 exports.dashboard = async function (req, res) {
-  var user = await User.findById (req.token.user);
+  var user = await User.findById (req.token.user).populate('savedPosts');
   if (!user) {
     res.status (404).send ({message: 'User not found'});
   } else res.status (200).send (user); //retrieve user details
@@ -223,12 +223,12 @@ exports.feed = function (req, res) {
         .select ('_id') //only fetch unique id of matching users
         .exec (function (err, userArray) {
           if (err) console.log (err);
-          //res.send(userArray);
           Post.find ({postedBy: {$in: userArray}})
             .sort ({updatedAt: -1}) //sort posts by latest updated time
+            .populate('postedBy')
             .exec (function (err, allPosts) {
-              if (err) res.send (err);
-              res.send (allPosts);
+            if (err) res.send (err);
+            res.send (allPosts);
             });
         });
     })
