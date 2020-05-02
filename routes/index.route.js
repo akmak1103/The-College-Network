@@ -1,9 +1,10 @@
 const express = require("express")
 const router = express.Router()
 const index_controller = require("../controllers/index.controller")
+const auth = require("../middleware/auth")
 
-router.get("/", index_controller.homePage)
-router.get("/signup", index_controller.signupPage)
-router.get("/signin", index_controller.signinPage)
+router.get("/", index_controller.homepage)
+router.get("/verificationEmail",index_controller.emailSent)
+router.get("/feed",index_controller.feed)
 
 module.exports = router;

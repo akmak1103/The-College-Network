@@ -1,0 +1,171 @@
+{{!-- <div class="video-background-holder">
+  <div class="video-background-overlay"></div>
+  <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+        <source src="videos/homepage.mp4" type="video/mp4">
+    </video>
+  <div class="video-background-content container">
+    <div class="d-flex h-100 text-center align-items-center">
+      <div class="text-white">
+        <h1 class="display-4">Bootstrap video background</h1>
+        <p class="lead mb-0">With HTML5 Video and Bootstrap 4</p>
+        <p class="lead">Snippet by <a href="https://bootstrapious.com/snippets" class="text-white">
+                    <u>Bootstrapious</u></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div> --}}
+
+{{!-- <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+        <source src="videos/homepage.mp4" type="video/mp4">
+    </video>
+    </div>
+    <div class="video-background-content" style="margin: 0 auto;z-index: 2;">
+        <h5>The College Network</h5>
+        <p>Sign Up Today</p>
+      </div>
+  </div>
+</div> --}}
+{{!-- 
+<div style="margin: 0 0 0 0; width: 1920px !important ;height=1080px;">
+    <video id="video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+        <source src="videos/homepage.mp4" type="video/mp4" />
+    </video>
+</div> --}}
+
+<video id="videoBG" poster="images/homepage.png" autoplay muted loop>
+    <source src="videos/homepage.mp4" type="video/mp4">
+</video>
+<div id="container">
+    <div id="textdiv">
+        <h1>{{heading}}</h1>
+        <p>{{info}}</p>
+        <br>
+        {{#if home}}
+        <a style="color: white;" href="#" data-toggle="modal" data-target="#modalRegisterForm"><button
+                class="btn btn-light" style="font-size: 18px;">{{cta}}</button></a>
+        {{else}}
+        <a style="color: white;" href="#"><button class="btn btn-light" style="font-size: 18px;">{{cta}}</button></a>
+        {{/if}}
+    </div>
+</div>
+
+<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: rgb(255, 199, 153)">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Sign in</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <i class="fas fa-envelope prefix grey-text"></i>
+                    <input type="email" id="email" class="form-control validate">
+                    <label data-error="wrong" data-success="right" for="defaultForm-email">Your email</label>
+                </div>
+
+                <div class="md-form mb-4">
+                    <i class="fas fa-lock prefix grey-text"></i>
+                    <input type="password" id="password" class="form-control validate">
+                    <label data-error="wrong" data-success="right" for="defaultForm-pass">Your password</label>
+                </div>
+
+
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn peach-gradient btn-rounded z-depth-1a waves-effect waves-light"
+                        style="color: white;font-weight: 600;font-size: 15px;" onclick="signIn()">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: rgb(255, 199, 153)">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Sign up</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <i class="fas fa-user prefix grey-text"></i>
+                    <input type="text" id="name" class="form-control validate">
+                    <label data-error="wrong" data-success="right" for="orangeForm-name">Your name</label>
+                </div>
+                <div class="md-form mb-5">
+                    <i class="fas fa-envelope prefix grey-text"></i>
+                    <input type="email" id="r_email" class="form-control validate">
+                    <label data-error="wrong" data-success="right" for="orangeForm-email">Your email</label>
+                </div>
+
+                <div class="md-form mb-4">
+                    <i class="fas fa-lock prefix grey-text"></i>
+                    <input type="password" id="r_password" class="form-control validate">
+                    <label data-error="wrong" data-success="right" for="orangeForm-pass">Your password</label>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn peach-gradient" style="color: white;font-weight: 600;font-size: 15px;"
+                        onclick="register()">Sign up</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function signIn() {
+        var email = document.getElementById("email").value
+        var password = document.getElementById("password").value
+        var xmlHttpRequest = new XMLHttpRequest()
+        xmlHttpRequest.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    document.cookie = "authorization=" + this.getResponseHeader("authorization")
+                    console.log("Signin successful!")
+                    window.location = "/feed"
+                }
+                else {
+                    document.getElementById("error").innerText = JSON.parse(this.responseText).msg
+                }
+            }
+        }
+        xmlHttpRequest.open("POST", "/users/signin", true)
+        console.log("Request Made");
+        xmlHttpRequest.setRequestHeader("Content-Type", "application/json")
+        xmlHttpRequest.send(JSON.stringify({ email: email, password: password }))
+    }
+
+    function register() {
+        var name = document.getElementById("name").value
+        var email = document.getElementById("r_email").value
+        var password = document.getElementById("r_password").value
+        var xmlHttpRequest = new XMLHttpRequest()
+        xmlHttpRequest.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    window.location = "/verificationEmail"
+                    document.getElementById("r_error").innerText = JSON.parse(this.responseText).msg
+                }
+                else {
+                    document.getElementById("r_error").style = "color:red";
+                    document.getElementById("r_error").innerText = JSON.parse(this.responseText).msg
+                }
+            }
+        }
+        xmlHttpRequest.open("POST", "/users/signup", true)
+        xmlHttpRequest.setRequestHeader("Content-Type", "application/json")
+        xmlHttpRequest.send(JSON.stringify({ name: name, email: email, password: password }))
+    }
+
+</script>

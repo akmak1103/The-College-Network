@@ -1,6 +1,6 @@
 const http = require ('http');
 
-exports.homePage = function (req, res) {
+exports.feed = function (req, res) {
   console.log ('Cookies: ', req.cookies);
   var promises = [];
   var data = {};
@@ -87,12 +87,26 @@ exports.homePage = function (req, res) {
     });
 };
 
-exports.signupPage = function (req,res)
-{
-  res.render('signup');
-}
+exports.homepage = function (req, res) {
+  if (req.cookies.authorization) {
+    res.redirect ('http://localhost:3000/feed');
+  }
+  res.render ('homepage', {
+    heading: 'Welcome to College Network',
+    info: 'A place where you can connect with other students of your university and make new connections that last life long. ' +
+      'Get all the happenings and events of your institution right here at the click of a button. ' +
+      'Share your educational journey with others and be a part of theirs.',
+    cta: 'SIGN UP',
+    home:'True'
+  });
+};
 
-exports.signinPage = function (req,res)
-{
-  res.render('signin');
-}
+exports.emailSent = function (req, res) {
+  res.render ('homepage', {
+    heading: 'Signed Up Successfully!',
+    info:'Welcome aboard! We have sent you an email with a verification link. Please verify your account by clicking on that link.<br>'+
+    'We are happy to have you with us :)',
+    cta:'Verification Email Sent',
+    home:'False'
+  });
+};
