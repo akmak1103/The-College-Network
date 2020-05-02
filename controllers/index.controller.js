@@ -97,7 +97,7 @@ exports.homepage = function (req, res) {
       'Get all the happenings and events of your institution right here at the click of a button. ' +
       'Share your educational journey with others and be a part of theirs.',
     cta: 'SIGN UP',
-    home:'True'
+    home:true
   });
 };
 
@@ -107,6 +107,6 @@ exports.emailSent = function (req, res) {
     info:'Welcome aboard! We have sent you an email with a verification link. Please verify your account by clicking on that link.<br>'+
     'We are happy to have you with us :)',
     cta:'Verification Email Sent',
-    home:'False'
+    home:false
   });
 };
