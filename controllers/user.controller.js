@@ -113,7 +113,7 @@ exports.verifyUser = async function (req, res) {
             .send ({msg: 'Error occured while updating user document'});
         }
         deleteHash (result);
-        res.redirect ('/signin');
+        res.redirect ('/feed');
       }
     );
   });
