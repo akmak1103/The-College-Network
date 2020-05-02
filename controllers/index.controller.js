@@ -104,7 +104,7 @@ exports.homepage = function (req, res) {
 exports.emailSent = function (req, res) {
   res.render ('homepage', {
     heading: 'Signed Up Successfully!',
-    info:'Welcome aboard! We have sent you an email with a verification link. Please verify your account by clicking on that link.<br>'+
+    info:'Welcome aboard! We have sent you an email with a verification link. Please verify your account by clicking on that link. '+
     'We are happy to have you with us :)',
     cta:'Verification Email Sent',
     home:false
