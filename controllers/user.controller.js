@@ -178,8 +178,6 @@ exports.signoutall = async function (req, res) {
 
 exports.changePass = async function (req, res) {
   let user = await User.findById (req.token.user);
-  console.log (user.password);
-  console.log (passwordHash.generate (req.body.new_password));
   if (!user) res.status (404).send ({msg: 'Account does not exist.'});
   if (passwordHash.verify (req.body.old_password, user.password))
     User.findByIdAndUpdate (
@@ -191,10 +189,10 @@ exports.changePass = async function (req, res) {
           res
             .status (500)
             .send ({msg: 'Error occured while updating password'});
-        res.status (200).send ({msg: 'Password successfully changed'});
+        res.status (200).send ({msg: 'Password successfully changed!'});
       }
     );
-  else res.status (403).send ({msg: 'Invalid Password.'});
+  else res.send ({msg: 'Old password does not match.'});
 };
 
 exports.dashboard = async function (req, res) {

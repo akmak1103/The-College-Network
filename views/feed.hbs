@@ -155,7 +155,7 @@
             <button class="btn blue-gradient mt-1" onclick="validateChangePassword()">Change Password&nbsp <i
                 class="fas fa-unlock"></i></button>
           </div>
-
+          <br>
           <p id="change-pass-error" style="text-align: center;"></p>
         </div>
 
@@ -197,7 +197,7 @@
         $("#new-pass").focus();
         return false;
       }
-      else ($("#label-new-pass").css("color", "green").text("Confirm password"))
+      else ($("#label-new-pass").css("color", "green").text("New password"))
       if (!($("#new-pass").val() == $("#new-pass-2").val())) {
         $("#label-new-pass-2").css("color", "red").text("Confirm password does not match.")
         $("#new-pass-2").focus();
@@ -205,8 +205,48 @@
       }
       else ($("#label-new-pass-2").css("color", "green").text("Confirm password"))
       console.log("Ready for server request.")
+      changePass()
     }
 
+    function changePass() {
+      /*$.ajax(
+        {
+          type: "POST",
+          url: "/users/changePassword",
+          dataType: "json",
+          headers: { "authorization": getCookie("authorization") },
+          data: { old_password: $("#old-pass").val(), new_password: $("#new-pass").val() },
+          contentType: "application/json",
+          success: function (data, status) {
+            $('#change-pass-error').text('status: ' + status + ', data: ' + data);
+          }
+        }
+      )*/
+      $.ajax('/users/changePassword', {
+        type: "POST",
+        headers: { "authorization": getCookie("authorization") },
+        data: { old_password: $("#old-pass").val(), new_password: $("#new-pass").val() },
+        success: function (data, status) {
+          $('#change-pass-error').text(data.msg);
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+          $('#change-pass-error').text('Error ' + errorMessage);
+        }
+      })
+    }
+
+    function getCookie(c_name) {
+      if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+          c_start = c_start + c_name.length + 1;
+          c_end = document.cookie.indexOf(";", c_start);
+          if (c_end == -1) c_end = document.cookie.length;
+          return unescape(document.cookie.substring(c_start, c_end));
+        }
+      }
+      return "";
+    }
     function signOut() {
       var xmlHttpRequest = new XMLHttpRequest()
       xmlHttpRequest.onreadystatechange = function () {
