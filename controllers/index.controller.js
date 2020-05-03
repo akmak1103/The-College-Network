@@ -39,7 +39,7 @@ exports.feed = function (req, res) {
       httpReq.end ();
     });
     promises.push (userPromise);
-  }
+  
 
   var feedPromise = new Promise ((resolve, reject) => {
     // Create options
@@ -85,6 +85,9 @@ exports.feed = function (req, res) {
       console.log (error);
       res.render ('error', error);
     });
+
+}
+  else(res.redirect('/'));
 };
 
 exports.homepage = function (req, res) {

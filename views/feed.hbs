@@ -98,6 +98,28 @@
     </div>
   </div>
 
+  <div class="modal fade" id="verifiedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Email Verified</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Congratulations! Your account email address has been successfully verified. Welcome to the COLLEGE NETWORK.
+          Please update your profile.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <script>
     // Accordion
     function myFunction(id) {
@@ -147,6 +169,23 @@
         }
         return "";
       }
+    }
+
+    function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+        vars[key] = value;
+      });
+      return vars;
+    }
+
+    window.onload = function(){
+      var newUser = getUrlVars()["newUser"];
+      console.log(newUser);
+      if (newUser)
+          {
+            $('#verifiedModal').modal('show');
+          }
     }
 
   </script>
