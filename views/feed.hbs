@@ -209,19 +209,6 @@
     }
 
     function changePass() {
-      /*$.ajax(
-        {
-          type: "POST",
-          url: "/users/changePassword",
-          dataType: "json",
-          headers: { "authorization": getCookie("authorization") },
-          data: { old_password: $("#old-pass").val(), new_password: $("#new-pass").val() },
-          contentType: "application/json",
-          success: function (data, status) {
-            $('#change-pass-error').text('status: ' + status + ', data: ' + data);
-          }
-        }
-      )*/
       $.ajax('/users/changePassword', {
         type: "POST",
         headers: { "authorization": getCookie("authorization") },
