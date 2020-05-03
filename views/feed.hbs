@@ -87,10 +87,21 @@
           <h4>{{postedBy.firstName}}</h4><br>
           <hr class="w3-clear">
           <p>{{caption}}</p>
-          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i> {{likes}}
-            Likes</button>
+
+
+          <button type="button"
+          id = "likebutton{{@index}}"
+          onclick="likePost('{{_id}}','{{@index}}')"
+          class="w3-button w3-theme-d1 w3-margin-bottom">
+          <i class="fa fa-thumbs-up">&nbsp;</i>
+          <span id="likes{{@index}}">{{likes}}</span>
+           Likes</button>
+
+
           <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>
              Comment</button>
+          <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fas fa-save"></i>
+             Save</button>
         </div>{{/each}}
 
         <!-- End Middle Column -->
@@ -163,7 +174,6 @@
       <!--/.Content-->
     </div>
   </div>
-
   <script>
     // Accordion
     function myFunction(id) {
@@ -279,9 +289,39 @@
       return vars;
     }
 
+    function likePost(postID, index) {
+      $.ajax('/post/like/' + postID, {
+        type: "PUT",
+        headers: { "authorization": getCookie("authorization") },
+        success: function (data, status) {
+          toastr.options = {
+            "newestOnTop": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": 1,
+            "hideDuration": 1000,
+            "timeOut": 1000,
+            "extendedTimeOut": 1000,
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          }
+          toastr.info('<i class="far fa-thumbs-up"></i> Liked Post');
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+          console.log(data.msg)
+        }
+      })
+      var likes = Number($("#likes" + index).text())
+      likes = likes + 1
+      $("#likes" + index).text(likes);
+      $("#likebutton" + index).removeAttr("onclick");
+    }
+
     window.onload = function () {
       var newUser = getUrlVars()["newUser"];
-      console.log(newUser);
       if (newUser) {
         $('#verifiedModal').modal('show');
       }
