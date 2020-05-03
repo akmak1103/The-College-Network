@@ -100,7 +100,7 @@
 
   <div class="modal fade" id="verifiedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog .modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Email Verified</h5>
@@ -120,6 +120,50 @@
   </div>
 
 
+  <div class="modal fade" id="modalLoginAvatar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog cascading-modal modal-avatar modal-md" role="document">
+      <!--Content-->
+      <div class="modal-content">
+
+        <!--Header-->
+        <div class="modal-header">
+          <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%281%29.jpg" alt="avatar"
+            class="rounded-circle img-responsive">
+        </div>
+        <!--Body-->
+        <div class="modal-body text-center mb-1">
+
+          <h5 class="mt-1 mb-2">{{user.name}}</h5>
+
+          <div class="md-form ml-0 mr-0">
+            <input type="password" id="old-pass" class="form-control form-control-md validate ml-0">
+            <label id="label-old-pass" for="old-pass" class="ml-0">Old password</label>
+          </div>
+
+          <div class="md-form ml-0 mr-0">
+            <input type="password" id="new-pass" class="form-control form-control-md validate ml-0">
+            <label id="label-new-pass" for="new-pass" class="ml-0">New password</label>
+          </div>
+
+          <div class="md-form ml-0 mr-0">
+            <input type="password" id="new-pass-2" class="form-control form-control-md validate ml-0">
+            <label id="label-new-pass-2" for="new-pass-2" class="ml-0">Confirm new password</label>
+          </div>
+
+          <div class="text-center mt-4">
+            <button class="btn blue-gradient mt-1" onclick="validateChangePassword()">Change Password&nbsp <i
+                class="fas fa-unlock"></i></button>
+          </div>
+
+          <p id="change-pass-error" style="text-align: center;"></p>
+        </div>
+
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>
+
   <script>
     // Accordion
     function myFunction(id) {
@@ -132,6 +176,35 @@
         x.previousElementSibling.className =
           x.previousElementSibling.className.replace(" w3-theme-d1", "");
       }
+    }
+
+    function validateChangePassword() {
+      if (!($("#old-pass").val().length > 7)) {
+        $("#label-old-pass").css("color", "red").text("Please enter your password of min. 8 characters.")
+        $("#old-pass").focus();
+        return false;
+      }
+      else ($("#label-old-pass").css("color", "green").text("Old password"))
+      var passReg = new RegExp('[0-9]');
+      if (!(passReg.test($("#new-pass").val())) || !($("#new-pass").val().length > 7)) {
+        $("#label-new-pass").css("color", "red").text("Minimum 8 characters with at least 1 digit")
+        $("#new-pass").focus();
+        return false;
+      }
+      else ($("#label-new-pass").css("color", "green").text("New password"))
+      if (($("#old-pass").val() == $("#new-pass").val())) {
+        $("#label-new-pass").css("color", "red").text("Please set a new password")
+        $("#new-pass").focus();
+        return false;
+      }
+      else ($("#label-new-pass").css("color", "green").text("Confirm password"))
+      if (!($("#new-pass").val() == $("#new-pass-2").val())) {
+        $("#label-new-pass-2").css("color", "red").text("Confirm password does not match.")
+        $("#new-pass-2").focus();
+        return false;
+      }
+      else ($("#label-new-pass-2").css("color", "green").text("Confirm password"))
+      console.log("Ready for server request.")
     }
 
     function signOut() {
@@ -179,13 +252,12 @@
       return vars;
     }
 
-    window.onload = function(){
+    window.onload = function () {
       var newUser = getUrlVars()["newUser"];
       console.log(newUser);
-      if (newUser)
-          {
-            $('#verifiedModal').modal('show');
-          }
+      if (newUser) {
+        $('#verifiedModal').modal('show');
+      }
     }
 
   </script>
