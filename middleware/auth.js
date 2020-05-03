@@ -5,8 +5,6 @@ module.exports = async function (req, res, next) {
     // 401 : Unauthorized
     return res.status (401).send ({msg: 'No token provided'});
   }
-
-  console.log ('Token (Auth.js): ' + token_id);
   var token = await Token.findById (token_id);
   if (!token) {
     // 403 : Forbidden

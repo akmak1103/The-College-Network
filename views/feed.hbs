@@ -30,11 +30,13 @@
         <div class="w3-card w3-round w3-white">
           <div class="w3-container">
             <h4 class="w3-center">{{user.name}}</h4>
-            <p class="w3-center"><img src="" class="w3-circle"></p>
+            <p class="w3-center"><img src="" alt="user_profile_pic" class="w3-circle"></p>
             <hr>
-            <p><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> {{user.college_name}}</p>
-            <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i>{{user.graduation_year}}</p>
-            <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i>{{user.email}}</p>
+            <p><i class="fa fa-envelope fa-fw w3-margin-right w3-text-theme"></i>{{user.email}}</p>
+            <p><i class="fa fas fa-transgender-alt fa-fw w3-margin-right w3-text-theme"></i>{{user.gender}}ale</p>
+            <p><i class="fa fas fa-university fa-fw w3-margin-right w3-text-theme"></i> {{user.college_name}}</p>
+            <p><i class="fa fas fa-graduation-cap fa-fw w3-margin-right w3-text-theme"></i>{{user.graduation_year}}</p>
+            <p><i class="fas fa-mobile-alt fa-fw w3-margin-right w3-text-theme"></i>{{user.contact_number}}</p>
           </div>
         </div>
         <br>
@@ -42,8 +44,9 @@
         <!-- Accordion -->
         <div class="w3-card w3-round">
           <div class="w3-white">
-            <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i
-                class="fa fa-circle-o-notch fa-fw w3-margin-right"></i>Saved Posts</button>
+            <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-left-align unique-color"
+              style="color: white;"><i class="fa fa-circle-o-notch fa-fw w3-margin-right"></i>Saved Posts</button>
+            <hr>
             <div id="Demo1" class="w3-hide w3-container">
               {{#each user.savedPosts}}<p>{{this.caption}}</p>{{/each}}
             </div>
@@ -54,13 +57,21 @@
         <!-- Interests -->
         <div class="w3-card w3-round w3-white w3-hide-small">
           <div class="w3-container">
-            <p>Interests</p>
+            <div style="padding-top: 20px;">Interests</div>
+            <hr>
             <p>{{#each user.interests}}
               <span class="w3-tag w3-small w3-theme-l5">{{this}}</span>{{/each}}
             </p>
           </div>
         </div>
         <br>
+        <a href="#" data-toggle="modal" data-target="#updateModal">
+          <div class="w3-card w3-round w3-white w3-hide-small">
+            <div class="w3-container unique-color"
+              style=" padding: 10px 5px; text-align: center; color: white; font-weight: 500;">Update
+            </div>
+          </div>
+        </a>
 
         <!-- End Left Column -->
       </div>
@@ -89,13 +100,11 @@
           <p>{{caption}}</p>
 
 
-          <button type="button"
-          id = "likebutton{{@index}}"
-          onclick="likePost('{{_id}}','{{@index}}')"
-          class="w3-button w3-theme-d1 w3-margin-bottom">
-          <i class="fa fa-thumbs-up">&nbsp;</i>
-          <span id="likes{{@index}}">{{likes}}</span>
-           Likes</button>
+          <button type="button" id="likebutton{{@index}}" onclick="likePost('{{_id}}','{{@index}}')"
+            class="w3-button w3-theme-d1 w3-margin-bottom">
+            <i class="fa fa-thumbs-up">&nbsp;</i>
+            <span id="likes{{@index}}">{{likes}}</span>
+            Likes</button>
 
 
           <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>
@@ -172,6 +181,60 @@
 
       </div>
       <!--/.Content-->
+    </div>
+  </div>
+
+
+  <!-- Button trigger modal -->
+  {{!-- <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#updateModal">
+  Launch demo modal
+</button> --}}
+  <!-- Modal -->
+  <div class="modal fade left" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+    aria-hidden="true" data-backdrop='false'>
+    <div class="modal-dialog modal-full-height modal-left" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">Update Profile</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="border border-light p-5">
+
+            <input class="form-control mb-4" id="user_name" type="text" placeholder="Name" value="{{user.name}}">
+
+            <input class="form-control mb-4" id="user_email" disabled type="email" placeholder="Email"
+              value="{{user.email}}">
+
+            <label for="user_gender">Gender</label>
+            <select class="browser-default custom-select mb-4" id="user_gender">
+              <option value="M">Male</option>
+              <option value="Fem">Female</option>
+            </select>
+
+            <div class="input-group mb-4">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="user_pic" aria-describedby="user_pic">
+                <label class="custom-file-label" for="user_pic">Profile Picture</label>
+              </div>
+            </div>
+
+            <input class="form-control mb-4" id="user_contact" type="text" placeholder="Contact"
+              value="{{user.contact_number}}">
+
+            <input class="form-control mb-4" id="user_gradYear" type="text" placeholder="Graduation Year"
+              value="{{user.graduation_year}}">
+
+          </form>
+        </div>
+        <p id="update-error"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="updateProfile()">Save changes</button>
+        </div>
+      </div>
     </div>
   </div>
   <script>
@@ -318,6 +381,29 @@
       likes = likes + 1
       $("#likes" + index).text(likes);
       $("#likebutton" + index).removeAttr("onclick");
+    }
+
+    function updateProfile() {
+      console.log($("#user_name").val());
+      console.log($("#user_gender").val());
+      console.log($("#user_contact").val());
+      console.log($("#user_gradYear").val());
+      $.ajax('/users/', {
+        type: "PUT",
+        headers: { "authorization": getCookie("authorization") },
+        data: {
+          name: $("#user_name").val(),
+          gender: $("#user_gender").val(),
+          contact_number: $("#user_contact").val(),
+          graduation_year: $("#user_gradYear").val(),
+        },
+        success: function (data, status) {
+          window.location.reload();
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+          $('#update-error').text('Error ' + errorMessage);
+        }
+      })
     }
 
     window.onload = function () {

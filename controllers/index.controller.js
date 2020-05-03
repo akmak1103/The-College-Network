@@ -1,7 +1,6 @@
 const http = require ('http');
 
 exports.feed = function (req, res) {
-  console.log ('Cookies: ', req.cookies);
   var promises = [];
   var data = {};
   if (req.cookies.authorization) {
@@ -78,7 +77,6 @@ exports.feed = function (req, res) {
   promises.push (feedPromise);
   Promise.all (promises)
     .then (() => {
-      console.log (data);
       res.render ('feed', data);
     })
     .catch (error => {
