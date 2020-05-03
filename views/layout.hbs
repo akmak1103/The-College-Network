@@ -5,6 +5,7 @@
   <title>{{title}}</title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel="stylesheet" href="/stylesheets/homepage.css" />
+  <link rel="stylesheet" href="/stylesheets/toastr.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <!-- Bootstrap CSS -->
@@ -26,6 +27,7 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
+  <script type="text/javascript" src="/javascripts/toastr.js"></script>
 </head>
 
 <body>
@@ -85,10 +87,16 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#" data-toggle="modal" data-target="#modalRegisterForm"><span style="font-weight: 600;">Sign Up &nbsp</span></a>
+          <a class="nav-link" href="#" data-toggle="modal" data-target="#resendEmail"><span
+              style="font-weight: 600;">Verify Email &nbsp</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLoginForm"><span style="font-weight: 600;"> &nbsp Sign In &nbsp</span></a>
+          <a class="nav-link" href="#" data-toggle="modal" data-target="#modalRegisterForm"><span
+              style="font-weight: 600;"> &nbsp Sign Up &nbsp</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLoginForm"><span
+              style="font-weight: 600;"> &nbsp Sign In &nbsp</span></a>
         </li>
       </ul>
     </div>

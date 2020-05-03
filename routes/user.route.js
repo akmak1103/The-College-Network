@@ -7,6 +7,8 @@ router.post("/signup", user_controller.signup)                      //working
 
 router.get("/verify/:hash",user_controller.verifyUser)              //working
 
+router.post("/resendVerifyEmail",user_controller.resendEmail)       //working
+
 router.post("/signin", user_controller.signin)                      //working
 
 router.post("/signout", auth, user_controller.signout)              //working

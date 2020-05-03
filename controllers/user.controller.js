@@ -95,6 +95,38 @@ function sendEmail (hash, email) {
   });
 }
 
+exports.resendEmail = async function (req, res) {
+  if (!req.body.email) {
+    res.json ({
+      msg: 'Enter valid email address',
+    });
+  } else {
+    var user = await User.findOne ({email: req.body.email});
+    if (user == null || user == undefined) {
+      res.json ({
+        msg: 'Please sign up first!',
+      });
+    } else {
+      if (user.isActive == true) {
+        res.json ({
+          msg: 'Email is already verified',
+        });
+      }
+    }
+  }
+  userhash = await UserHash.findOne ({user_id: user._id});
+  if (!userhash) {
+    console.log ('Hash not found in DB');
+    res.json ({msg: 'Error in sending link. Contact Admin'});
+  } else {
+    sendEmail (userhash.hash, req.body.email);
+    var token = new Token ({user: user._id});
+    token = await token.save ();
+    res.header ('authorization', token._id);
+    res.status (200).send ({msg: 'Verification Email has been sent again.'});
+  }
+};
+
 exports.verifyUser = async function (req, res) {
   await UserHash.findOne ({hash: req.params.hash}, function (err, result) {
     if (err) {
@@ -113,7 +145,7 @@ exports.verifyUser = async function (req, res) {
             .send ({msg: 'Error occured while updating user document'});
         }
         deleteHash (result);
-        res.redirect ('/feed?newUser='+true);
+        res.redirect ('/feed?newUser=' + true);
       }
     );
   });
