@@ -56,7 +56,7 @@ exports.signup = async function (req, res) {
         .catch (err => {
           console.log ('Error creating Hash');
         });
-      sendEmail (verification_hash, req.body.email);
+      sendEmail (verification_hash, req.body.email, 0);
       var token = new Token ({user: user._id});
       token = await token.save ();
       res.header ('authorization', token._id);
@@ -69,7 +69,7 @@ exports.signup = async function (req, res) {
   }
 };
 
-function sendEmail (hash, email) {
+function sendEmail (hash, email, type) {
   let smtpTransport = nodemailer.createTransport ({
     service: 'Gmail',
     auth: {
@@ -77,20 +77,30 @@ function sendEmail (hash, email) {
       pass: process.env.SENDER_EMAIL_PASS, //configured in .env file
     },
   });
-
-  let link = 'http://localhost:3000/users/verify/' + hash;
-  let mailOptions = {
-    to: email,
-    subject: '[The College Network] Verify your Email Address',
-    html: 'This email address has been used to create an account on The College Network. Please click the following link to verify: ' +
-      link,
-  };
+  var mailOptions;
+  if (type == 0) {
+    let link = 'http://localhost:3000/users/verify/' + hash;
+    mailOptions = {
+      to: email,
+      subject: '[The College Network] Verify your Email Address',
+      html: 'This email address has been used to create an account on The College Network. Please click the following link to verify: ' +
+        link,
+    };
+  } else if (type == 1) {
+    mailOptions = {
+      to: email,
+      subject: '[The College Network] Password Reset',
+      html: 'Your password has been successfully reset. New Password is: ' +
+        hash +
+        '. Please use this password to login.',
+    };
+  }
 
   smtpTransport.sendMail (mailOptions, function (err, msg) {
     if (err) {
       console.log (err);
     } else {
-      console.log ('Verification Email Sent');
+      console.log ('Email Sent');
     }
   });
 }
@@ -119,7 +129,7 @@ exports.resendEmail = async function (req, res) {
     console.log ('Hash not found in DB');
     res.json ({msg: 'Error in sending link. Contact Admin'});
   } else {
-    sendEmail (userhash.hash, req.body.email);
+    sendEmail (userhash.hash, req.body.email, 0);
     var token = new Token ({user: user._id});
     token = await token.save ();
     res.header ('authorization', token._id);
@@ -226,6 +236,45 @@ exports.changePass = async function (req, res) {
     );
   else res.send ({msg: 'Old password does not match.'});
 };
+
+exports.resetPass = async function (req, res) {
+  if (!req.body.email) {
+    res.json ({
+      msg: 'Enter valid email address',
+    });
+  } else {
+    var user = await User.findOne ({email: req.body.email});
+    if (user == null || user == undefined) {
+      res.json ({
+        msg: 'Please sign up first!',
+      });
+    }
+  }
+  if (!(user==null)){var new_password = generate_random_password ();
+  user.updateOne (
+    {password: passwordHash.generate (new_password)},
+    {new: true},
+    function (err, new_user) {
+      if (err)
+        res.status (500).send ({msg: 'Error occured while updating password'});
+      sendEmail (new_password, req.body.email, 1);
+      res
+        .status (200)
+        .send ({msg: 'Password has been reset. Please check your email.'});
+    }
+  );}
+};
+
+function generate_random_password () {
+  var pattern_list = 'abcdefghijklmnopqrstuvwxyz123456789';
+  var example = '';
+  for (i = 0; i < 8; i++)
+    example += pattern_list.charAt (
+      Math.floor (Math.random () * pattern_list.length)
+    );
+  console.log (example);
+  return example;
+}
 
 exports.dashboard = async function (req, res) {
   var user = await User.findById (req.token.user).populate ('savedPosts');

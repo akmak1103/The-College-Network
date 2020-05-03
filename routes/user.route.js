@@ -17,6 +17,8 @@ router.post("/signoutall", auth, user_controller.signoutall)        //working
 
 router.post("/changePassword", auth, user_controller.changePass)    //working
 
+router.post("/resetPass",user_controller.resetPass)                 //working
+
 router.get("/", auth, user_controller.dashboard)                    //working
 
 router.put("/", auth, user_controller.update)                       //working

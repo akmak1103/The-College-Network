@@ -38,6 +38,9 @@
                     <label id="invalid-login-pass" for="password">Your password</label>
                 </div>
 
+                <div style="text-align: center; margin-bottom: 15px; color: black;">
+                        <a href="javascript:passModal()">Forgot password?</a>
+                    </div>
 
                 <div class="modal-footer d-flex justify-content-center">
                     <button class="btn peach-gradient btn-rounded z-depth-1a waves-effect waves-light"
@@ -70,6 +73,32 @@
                         onclick="validateResendEmail()">Resend</button>
                 </div>
                 <p id="resend-error" style="color: black; text-align: center;"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resetPass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: rgb(255, 199, 153)">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Reset Password</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <i class="fas fa-envelope prefix grey-text"></i>
+                    <input type="email" id="regMail" class="form-control validate">
+                    <label id="label-regMail" for="email">Your email</label>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn peach-gradient btn-rounded z-depth-1a waves-effect waves-light"
+                        style="color: white;font-weight: 600;font-size: 15px;"
+                        onclick="validateResetEmail()">Reset</button>
+                </div>
+                <p id="reset-error" style="color: black; text-align: center;"></p>
             </div>
         </div>
     </div>
@@ -177,15 +206,14 @@
             return false;
         }
         else ($("#label-resendEmail").css("color", "green"))
-        console.log("Good to go")
         resendEmail();
     }
 
     function resendEmail() {
         $.ajax('/users/resendVerifyEmail', {
             type: "POST",
-            data: { email: $("#registeredEmail").val()},
-            success: function (data, status,jqXhr) {
+            data: { email: $("#registeredEmail").val() },
+            success: function (data, status, jqXhr) {
                 $('#resend-error').text(data.msg);
                 document.cookie = "authorization=" + jqXhr.getResponseHeader("authorization")
             },
@@ -236,5 +264,41 @@
         xmlHttpRequest.open("POST", "/users/signup", true)
         xmlHttpRequest.setRequestHeader("Content-Type", "application/json")
         xmlHttpRequest.send(JSON.stringify({ name: name, email: email, password: password }))
+    }
+
+    function passModal()
+    {
+        $("#modalLoginForm").modal('hide');
+        $("#resetPass").modal('show');
+    }
+
+    function validateResetEmail() {
+
+        var email = $("#regMail").val();
+        atpos = email.indexOf("@");
+        dotpos = email.lastIndexOf(".");
+        if (atpos < 1 || (dotpos - atpos < 2)) {
+            $("#label-regMail").css("color", "red")
+            $("#label-regMail").text("Please enter a valid email");
+            $("#regMail").focus();
+            return false;
+        }
+        else ($("#label-regMail").css("color", "green"))
+        resetPassword();
+    }
+
+    function resetPassword()
+    {
+        $.ajax ('/users/resetPass',
+        {
+            type:"POST",
+            data: { email: $("#regMail").val() },
+            success: function (data, status, jqXhr) {
+                $('#reset-error').text(data.msg);
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                $('#reset-error').text('Error ' + errorMessage);
+            }
+        })
     }
 </script>
