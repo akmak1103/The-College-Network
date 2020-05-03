@@ -1,5 +1,4 @@
 const User = require ('../models/user.model');
-const http = require ('http');
 var passwordHash = require ('password-hash');
 var crypto = require ('crypto'); //node module to create hashes
 const nodemailer = require ('nodemailer'); //package to allow email functionality
@@ -284,12 +283,13 @@ exports.dashboard = async function (req, res) {
 };
 
 exports.update = function (req, res) {
+  console.log(req.files.user_pic);
   var user = User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});
   } else {
     //update the details of user which have been changed
-    user.update (req.body, function (err, result) {
+    user.update ({name:req.body.name}, function (err, result) {
       if (err) res.status (401).send ({msg: 'Update Failed'});
       res.status (200).send ({msg: 'User details updated successfully!'});
     });
