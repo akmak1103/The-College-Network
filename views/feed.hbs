@@ -325,7 +325,7 @@
       xmlHttpRequest.setRequestHeader("authorization", getCookie("authorization"));
       document.cookie = ("authorization=; expires = Thu, 01 Jan 1970 00:00:00 GMT");
       xmlHttpRequest.send();
-      document.getElementById("signout_Msg").innerText = JSON.parse(this.responseText).message
+      document.getElementById("signout_Msg").innerText = JSON.parse(this.responseText).message}
 
       function getCookie(cname) {
         var name = cname + "=";
@@ -342,7 +342,6 @@
         }
         return "";
       }
-    }
 
     function getUrlVars() {
       var vars = {};
@@ -388,16 +387,14 @@
       console.log($("#user_gender").val());
       console.log($("#user_contact").val());
       console.log($("#user_gradYear").val());
-      console.log($("#user_pic").val())
-      $.ajax('/users/', {
-        type: "PUT",
+      /*$.ajax('/users/', {
+        type: "POST",
         headers: { "authorization": getCookie("authorization") },
         data: {
           name: $("#user_name").val(),
           gender: $("#user_gender").val(),
           contact_number: $("#user_contact").val(),
-          graduation_year: $("#user_gradYear").val(),
-          user_pic: $("#user_pic").val(),
+          graduation_year: $("#user_gradYear").val()
         },
         success: function (data, status) {
           window.location.reload();
@@ -405,7 +402,23 @@
         error: function (jqXhr, textStatus, errorMessage) {
           $('#update-error').text('Error ' + errorMessage);
         }
-      })
+      })*/
+      var xmlHttpRequest = new XMLHttpRequest()
+      xmlHttpRequest.onreadystatechange = function () {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            console.log("updated Profile")
+            window.location.reload();
+          }
+          else {
+            document.getElementById("update-error").innerText = JSON.parse(this.responseText).message
+          }
+        }
+      }
+      xmlHttpRequest.open("POST", "/users/", true)
+      xmlHttpRequest.setRequestHeader("Content-Type", "application/json")
+      xmlHttpRequest.setRequestHeader("authorization", getCookie("authorization"));
+      xmlHttpRequest.send();
     }
 
     window.onload = function () {

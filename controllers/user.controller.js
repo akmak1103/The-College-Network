@@ -283,13 +283,13 @@ exports.dashboard = async function (req, res) {
 };
 
 exports.update = function (req, res) {
-  console.log(req.files.user_pic);
+  console.log("File is ...... "+req.file)
   var user = User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});
   } else {
     //update the details of user which have been changed
-    user.update ({name:req.body.name}, function (err, result) {
+    user.updateOne (req.body, function (err, result) {
       if (err) res.status (401).send ({msg: 'Update Failed'});
       res.status (200).send ({msg: 'User details updated successfully!'});
     });
