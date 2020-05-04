@@ -104,7 +104,7 @@ function sendEmail (hash, email, type) {
   });
 }
 
-exports.resendEmail = async function (req, res) {
+exports.resendVerifyEmail = async function (req, res) {
   if (!req.body.email) {
     res.json ({
       msg: 'Enter valid email address',
@@ -134,6 +134,29 @@ exports.resendEmail = async function (req, res) {
     res.header ('authorization', token._id);
     res.status (200).send ({msg: 'Verification Email has been sent again.'});
   }
+};
+
+exports.resendEmail = function (req, res) {
+  console.log("Inside controller")
+  Token.findById (req.cookies.authorization, function (err, result) {
+    if (err) result.status (500).json ({msg: err});
+    User.findById (result.user, async function (error, user) {
+      if (error) result.status (500).json ({msg: error});
+      userhash = await UserHash.findOne ({user_id: user._id});
+      if (!userhash) {
+        console.log ('Hash not found in DB');
+        res.json ({msg: 'Error in sending link. Contact Admin'});
+      } else {
+        sendEmail (userhash.hash, user.email, 0);
+        var token = new Token ({user: user._id});
+        token = await token.save ();
+        res.header ('authorization', token._id);
+        res
+          .status (200)
+          .send ({msg: 'Verification Email has been sent again.'});
+      }
+    });
+  });
 };
 
 exports.verifyUser = async function (req, res) {
@@ -249,19 +272,23 @@ exports.resetPass = async function (req, res) {
       });
     }
   }
-  if (!(user==null)){var new_password = generate_random_password ();
-  user.updateOne (
-    {password: passwordHash.generate (new_password)},
-    {new: true},
-    function (err, new_user) {
-      if (err)
-        res.status (500).send ({msg: 'Error occured while updating password'});
-      sendEmail (new_password, req.body.email, 1);
-      res
-        .status (200)
-        .send ({msg: 'Password has been reset. Please check your email.'});
-    }
-  );}
+  if (!(user == null)) {
+    var new_password = generate_random_password ();
+    user.updateOne (
+      {password: passwordHash.generate (new_password)},
+      {new: true},
+      function (err, new_user) {
+        if (err)
+          res
+            .status (500)
+            .send ({msg: 'Error occured while updating password'});
+        sendEmail (new_password, req.body.email, 1);
+        res
+          .status (200)
+          .send ({msg: 'Password has been reset. Please check your email.'});
+      }
+    );
+  }
 };
 
 function generate_random_password () {
@@ -283,7 +310,7 @@ exports.dashboard = async function (req, res) {
 };
 
 exports.update = function (req, res) {
-  console.log("File is ...... "+req.file)
+  console.log ('File is ...... ' + req.file);
   var user = User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});

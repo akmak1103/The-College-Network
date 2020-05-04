@@ -28,7 +28,9 @@ router.post ('/signup', user_controller.signup); //working
 
 router.get ('/verify/:hash', user_controller.verifyUser); //working
 
-router.post ('/resendVerifyEmail', user_controller.resendEmail); //working
+router.post ('/resendVerifyEmail', user_controller.resendVerifyEmail); //working
+
+router.post ('/resendEmail', user_controller.resendEmail); //working
 
 router.post ('/signin', user_controller.signin); //working
 

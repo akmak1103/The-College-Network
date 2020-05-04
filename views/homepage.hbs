@@ -10,7 +10,10 @@
         <a style="color: white;" href="#" data-toggle="modal" data-target="#modalRegisterForm"><button
                 class="btn btn-light" style="font-size: 18px;">{{cta}}</button></a>
         {{else}}
-        <a style="color: white;" href="#"><button class="btn btn-light" style="font-size: 18px;">{{cta}}</button></a>
+        <a style="color: white;" href="#"><button class="btn btn-light" style="font-size: 18px;"
+                onclick="resendemail()">{{cta}}</button></a>
+                <hr>
+                <p id="resend-msg" style="color: white !important;"></p>
         {{/if}}
     </div>
 </div>
@@ -39,8 +42,8 @@
                 </div>
 
                 <div style="text-align: center; margin-bottom: 15px; color: black;">
-                        <a href="javascript:passModal()">Forgot password?</a>
-                    </div>
+                    <a href="javascript:passModal()">Forgot password?</a>
+                </div>
 
                 <div class="modal-footer d-flex justify-content-center">
                     <button class="btn peach-gradient btn-rounded z-depth-1a waves-effect waves-light"
@@ -223,6 +226,20 @@
         })
     }
 
+    function resendemail() {
+        console.log("This is other function.")
+        $.ajax('/users/resendEmail', {
+            type: "POST",
+            success: function (data, status, jqXhr) {
+                $('#resend-msg').text(data.msg);
+                document.cookie = "authorization=" + jqXhr.getResponseHeader("authorization")
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                $('#resend-msg').text('Error ' + errorMessage);
+            }
+        })
+    }
+
     function signIn() {
         var email = document.getElementById("email").value
         var password = document.getElementById("password").value
@@ -266,8 +283,7 @@
         xmlHttpRequest.send(JSON.stringify({ name: name, email: email, password: password }))
     }
 
-    function passModal()
-    {
+    function passModal() {
         $("#modalLoginForm").modal('hide');
         $("#resetPass").modal('show');
     }
@@ -287,18 +303,17 @@
         resetPassword();
     }
 
-    function resetPassword()
-    {
-        $.ajax ('/users/resetPass',
-        {
-            type:"POST",
-            data: { email: $("#regMail").val() },
-            success: function (data, status, jqXhr) {
-                $('#reset-error').text(data.msg);
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                $('#reset-error').text('Error ' + errorMessage);
-            }
-        })
+    function resetPassword() {
+        $.ajax('/users/resetPass',
+            {
+                type: "POST",
+                data: { email: $("#regMail").val() },
+                success: function (data, status, jqXhr) {
+                    $('#reset-error').text(data.msg);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    $('#reset-error').text('Error ' + errorMessage);
+                }
+            })
     }
 </script>

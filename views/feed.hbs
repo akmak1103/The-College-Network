@@ -33,7 +33,7 @@
             <p class="w3-center"><img src="" alt="user_profile_pic" class="w3-circle"></p>
             <hr>
             <p><i class="fa fa-envelope fa-fw w3-margin-right w3-text-theme"></i>{{user.email}}</p>
-            <p><i class="fa fas fa-transgender-alt fa-fw w3-margin-right w3-text-theme"></i>{{user.gender}}ale</p>
+            <p><i class="fa fas fa-transgender-alt fa-fw w3-margin-right w3-text-theme"></i>{{#if user.gender}}{{user.gender}}ale{{else}}Gender{{/if}}</p>
             <p><i class="fa fas fa-university fa-fw w3-margin-right w3-text-theme"></i> {{user.college_name}}</p>
             <p><i class="fa fas fa-graduation-cap fa-fw w3-margin-right w3-text-theme"></i>{{user.graduation_year}}</p>
             <p><i class="fas fa-mobile-alt fa-fw w3-margin-right w3-text-theme"></i>{{user.contact_number}}</p>
@@ -133,7 +133,7 @@
           Please update your profile.
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Update</button>
+          <button data-toggle="modal" data-target="#updateModal" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
         </div>
       </div>
     </div>
@@ -387,7 +387,7 @@
       console.log($("#user_gender").val());
       console.log($("#user_contact").val());
       console.log($("#user_gradYear").val());
-      /*$.ajax('/users/', {
+      $.ajax('/users/', {
         type: "POST",
         headers: { "authorization": getCookie("authorization") },
         data: {
@@ -402,23 +402,7 @@
         error: function (jqXhr, textStatus, errorMessage) {
           $('#update-error').text('Error ' + errorMessage);
         }
-      })*/
-      var xmlHttpRequest = new XMLHttpRequest()
-      xmlHttpRequest.onreadystatechange = function () {
-        if (this.readyState === 4) {
-          if (this.status === 200) {
-            console.log("updated Profile")
-            window.location.reload();
-          }
-          else {
-            document.getElementById("update-error").innerText = JSON.parse(this.responseText).message
-          }
-        }
-      }
-      xmlHttpRequest.open("POST", "/users/", true)
-      xmlHttpRequest.setRequestHeader("Content-Type", "application/json")
-      xmlHttpRequest.setRequestHeader("authorization", getCookie("authorization"));
-      xmlHttpRequest.send();
+      })
     }
 
     window.onload = function () {
