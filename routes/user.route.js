@@ -44,7 +44,14 @@ router.post ('/resetPass', user_controller.resetPass); //working
 
 router.get ('/', auth, user_controller.dashboard); //working
 
-router.post ('/', auth, upload.single ('user_pic'), user_controller.update); //working
+router.post ('/', auth, user_controller.update); //working
+
+router.post (
+  '/updatePic',
+  auth,
+  upload.single ('user_pic'),
+  user_controller.updatePhoto
+);
 
 router.get ('/feed', auth, user_controller.feed); //working
 

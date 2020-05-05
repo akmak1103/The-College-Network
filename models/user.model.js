@@ -10,7 +10,8 @@ const User = new mongoose.Schema({
     password:{type:String},
     isActive:{type:Boolean,default:false},
     savedPosts:[{type:mongoose.Schema.Types.ObjectId,ref:'Post'}],
-    interests:[{type:String}]
+    interests:[{type:String}],
+    user_pic: {type:String}
 })
 
 module.exports = mongoose.model('User',User);

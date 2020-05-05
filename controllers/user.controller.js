@@ -137,7 +137,7 @@ exports.resendVerifyEmail = async function (req, res) {
 };
 
 exports.resendEmail = function (req, res) {
-  console.log("Inside controller")
+  console.log ('Inside controller');
   Token.findById (req.cookies.authorization, function (err, result) {
     if (err) result.status (500).json ({msg: err});
     User.findById (result.user, async function (error, user) {
@@ -310,7 +310,20 @@ exports.dashboard = async function (req, res) {
 };
 
 exports.update = function (req, res) {
-  console.log ('File is ...... ' + req.file);
+  var user = User.findById (req.token.user);
+  if (!user) {
+    res.status (404).send ({message: 'User not found'});
+  } else {
+    //update the details of user which have been changed
+    user.updateOne (req.body, function (err, result) {
+      if (err) res.status (401).send ({msg: 'Update Failed'});
+      res.status (200).send ({msg: 'User details updated successfully!'});
+    });
+  }
+};
+
+exports.updatePhoto = function (req, res) {
+  req.body.user_pic = 'upload/' + req.file.filename;
   var user = User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});

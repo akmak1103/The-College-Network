@@ -29,8 +29,11 @@
         <!-- Profile -->
         <div class="w3-card w3-round w3-white">
           <div class="w3-container">
-            <h4 class="w3-center">{{user.name}}</h4>
-            <p class="w3-center"><img src="" alt="user_profile_pic" class="w3-circle"></p>
+            <hr>
+            <p class="w3-center">
+              <img src={{#if user.user_pic}} {{user.user_pic}} {{else}} '/images/user.webp' {{/if}}
+                alt="user_profile_pic" style="height: 200px;" class="w3-circle"></p>
+            <h3 class="w3-center">{{user.name}}</h3>
             <hr>
             <p><i class="fa fa-envelope fa-fw w3-margin-right w3-text-theme"></i>{{user.email}}</p>
             <p><i
@@ -151,8 +154,7 @@
 
         <!--Header-->
         <div class="modal-header">
-          <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%281%29.jpg" alt="avatar"
-            class="rounded-circle img-responsive">
+          <img src="images/pass.jpg" alt="avatar" class="rounded-circle img-responsive">
         </div>
         <!--Body-->
         <div class="modal-body text-center mb-1">
@@ -387,18 +389,35 @@
     }
 
     function updateProfile() {
-      var fd = new FormData();
-      var image = $('#user_pic')[0].files[0]
-      fd.append("name", $("#user_name").val())
-      fd.append("gender", $("#user_gender").val())
-      fd.append("contact_number", $("#user_contact").val())
-      fd.append("graduation_year", $("#user_gradYear").val())
-      fd.append('user_pic', image);
+      if ($('#user_pic').val()) { updatePhoto(); }
       $.ajax('/users/', {
         type: "POST",
         headers: { "authorization": getCookie("authorization") },
+        data: {
+          name: $("#user_name").val(),
+          gender: $("#user_gender").val(),
+          contact_number: $("#user_contact").val(),
+          graducation_year: $("#user_gradYear").val()
+        },
+        success: function (data, status) {
+          window.location.reload();
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+          $('#update-error').text('Error ' + errorMessage);
+        }
+      })
+    }
+
+    async function updatePhoto() {
+      console.log("Inside update photo")
+      var fd = new FormData();
+      var image = $('#user_pic')[0].files[0]
+      fd.append('user_pic', image);
+      await $.ajax('/users/updatePic', {
+        type: "POST",
         contentType: false,
         processData: false,
+        headers: { "authorization": getCookie("authorization") },
         data: fd,
         success: function (data, status) {
           window.location.reload();
