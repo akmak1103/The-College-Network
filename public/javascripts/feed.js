@@ -45,7 +45,23 @@ function changePass () {
       new_password: $ ('#new-pass').val (),
     },
     success: function (data, status) {
+      $ ('#changePassModal').modal ('hide');
       $ ('#change-pass-error').text (data.msg);
+      toastr.options = {
+        newestOnTop: true,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: 1,
+        hideDuration: 1000,
+        timeOut: 1000,
+        extendedTimeOut: 1000,
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+      };
+      toastr.success ('<i class="fas fa-check-double"></i> Password successfully changed!');
     },
     error: function (jqXhr, textStatus, errorMessage) {
       $ ('#change-pass-error').text ('Error ' + errorMessage);
@@ -164,7 +180,23 @@ function updateProfile () {
       graducation_year: $ ('#user_gradYear').val (),
     },
     success: function (data, status) {
-      window.location.reload ();
+      $ ('#updateModal').modal ('hide');
+      toastr.options = {
+        newestOnTop: true,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: 1,
+        hideDuration: 1000,
+        timeOut: 1000,
+        extendedTimeOut: 1000,
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+      };
+      toastr.success ('<i class="fas fa-check-double"></i> Profile Updated!');
+      setTimeout ('window.location.reload ();', 2000);
     },
     error: function (jqXhr, textStatus, errorMessage) {
       $ ('#update-error').text ('Error ' + errorMessage);
