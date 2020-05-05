@@ -61,7 +61,9 @@ function changePass () {
         showMethod: 'fadeIn',
         hideMethod: 'fadeOut',
       };
-      toastr.success ('<i class="fas fa-check-double"></i> Password successfully changed!');
+      toastr.success (
+        '<i class="fas fa-check-double"></i> Password successfully changed!'
+      );
     },
     error: function (jqXhr, textStatus, errorMessage) {
       $ ('#change-pass-error').text ('Error ' + errorMessage);
@@ -155,16 +157,30 @@ function likePost (postID, index) {
         hideMethod: 'fadeOut',
       };
       toastr.info ('<i class="far fa-thumbs-up"></i> Liked Post');
+      var likes = Number ($ ('#likes' + index).text ());
+      likes = likes + 1;
+      $ ('#likes' + index).text (likes);
     },
     error: function (jqXhr, textStatus, errorMessage) {
-      console.log (data.msg);
+      toastr.options = {
+        newestOnTop: true,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: 1,
+        hideDuration: 1000,
+        timeOut: 1000,
+        extendedTimeOut: 1000,
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+      };
+      toastr.info ('<i class="far fa-thumbs-up"></i> Already Liked');
     },
   });
-  var likes = Number ($ ('#likes' + index).text ());
-  likes = likes + 1;
-  $ ('#likes' + index).text (likes);
   $ ('#likebutton' + index).removeAttr ('onclick');
-  $ ('#likebutton' + index).removeClass("btn-outline-danger");
+  $ ('#likebutton' + index).removeClass ('btn-outline-danger');
 }
 
 function updateProfile () {
@@ -178,7 +194,7 @@ function updateProfile () {
       name: $ ('#user_name').val (),
       gender: $ ('#user_gender').val (),
       bio: $ ('#user_bio').val (),
-      contact_number: $ ('#user_contact').val ()
+      contact_number: $ ('#user_contact').val (),
     },
     success: function (data, status) {
       $ ('#updateModal').modal ('hide');
@@ -225,13 +241,11 @@ async function updatePhoto () {
   });
 }
 
-
 function postComment (postID, index) {
-
   $.ajax ('/post/comment/' + postID, {
     type: 'POST',
-    data:{
-      commentData: $('#commentData'+index).val()
+    data: {
+      commentData: $ ('#commentData' + index).val (),
     },
     headers: {authorization: getCookie ('authorization')},
     success: function (data, status) {
@@ -258,13 +272,12 @@ function postComment (postID, index) {
   });
 }
 
-function doPost()
-{
-  console.log($('#postCaption').val())
+function doPost () {
+  console.log ($ ('#postCaption').val ());
   $.ajax ('/users/post', {
     type: 'POST',
-    data:{
-      caption: $('#postCaption').val()
+    data: {
+      caption: $ ('#postCaption').val (),
     },
     headers: {authorization: getCookie ('authorization')},
     success: function (data, status) {

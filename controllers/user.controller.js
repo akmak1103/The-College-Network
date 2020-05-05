@@ -320,7 +320,7 @@ exports.update = function (req, res) {
   } else {
     //update the details of user which have been changed
     user.updateOne (req.body, function (err, result) {
-      if (err) res.status (401).send ({msg: 'Update Failed'});
+      if (err) res.send ({msg: 'Update Failed'});
       res.status (200).send ({msg: 'User details updated successfully!'});
     });
   }
