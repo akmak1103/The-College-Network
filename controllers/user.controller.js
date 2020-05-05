@@ -351,6 +351,7 @@ exports.feed = function (req, res) {
           if (err) console.log (err);
           Post.find ({postedBy: {$in: userArray}})
             .sort ({updatedAt: -1}) //sort posts by latest updated time
+            .populate({path:'comments.author'})
             .populate ('postedBy')
             .exec (function (err, allPosts) {
               if (err) res.send (err);
