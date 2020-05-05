@@ -66,13 +66,13 @@
                     <div class="col-md-8">
                         <div class="mb-4">
                             <div class="form-group shadow-textarea" style="margin-top:0em !important;">
-                                <textarea class="form-control z-depth-1 pt-3" id="createPost" rows="3"
+                                <textarea class="form-control z-depth-1 pt-3" id="postCaption" rows="3"
                                     placeholder="What is on your mind today...."></textarea>
                             </div>
                             <button type="button" class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2">Add
                                 files</button>
                             <button type="button"
-                                class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2">Post</button>
+                                class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2" onclick="doPost()">Post</button>
                         </div>
                         <hr class="white mb-5">
 
@@ -82,7 +82,7 @@
                             {{#if image}}
                             <!-- Card image -->
                             <div class="view view-cascade overlay zoom">
-                                <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/photo6.jpg"
+                                <img class="card-img-top" src='{{image}}'
                                     alt="Card image cap" style="height: 250px;">
                                 <a href="#!">
                                     <div class="mask rgba-white-slight"></div>
