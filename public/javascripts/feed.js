@@ -177,8 +177,8 @@ function updateProfile () {
     data: {
       name: $ ('#user_name').val (),
       gender: $ ('#user_gender').val (),
-      contact_number: $ ('#user_contact').val (),
-      graducation_year: $ ('#user_gradYear').val (),
+      bio: $ ('#user_bio').val (),
+      contact_number: $ ('#user_contact').val ()
     },
     success: function (data, status) {
       $ ('#updateModal').modal ('hide');

@@ -27,9 +27,7 @@
                                     <strong>{{pageData.user.name}}</strong>
                                 </h4>
                                 <p class="mb-4">
-                                    <strong>The most comprehensive tutorial for the Bootstrap 4. Loved by over 500 000
-                                        users. Video
-                                        and written versions available. Create your own, stunning website.</strong>
+                                    <strong>{{pageData.user.bio}}</strong>
                                 </p>
                             </div>
                             <!-- Content -->
@@ -71,8 +69,8 @@
                             </div>
                             <button type="button" class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2">Add
                                 files</button>
-                            <button type="button"
-                                class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2" onclick="doPost()">Post</button>
+                            <button type="button" class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2"
+                                onclick="doPost()">Post</button>
                         </div>
                         <hr class="white mb-5">
 
@@ -82,8 +80,7 @@
                             {{#if image}}
                             <!-- Card image -->
                             <div class="view view-cascade overlay zoom">
-                                <img class="card-img-top" src='{{image}}'
-                                    alt="Card image cap" style="height: 250px;">
+                                <img class="card-img-top" src='{{image}}' alt="Card image cap" style="height: 250px;">
                                 <a href="#!">
                                     <div class="mask rgba-white-slight"></div>
                                 </a>
@@ -115,11 +112,13 @@
                                         </div><br>{{/each}}
                                     </div>
                                     <div class="md-form input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Add your comment" id="commentData{{@index}}"
-                                            aria-label="Recipient's username" aria-describedby="MaterialButton-addon2">
+                                        <input type="text" class="form-control" placeholder="Add your comment"
+                                            id="commentData{{@index}}" aria-label="Recipient's username"
+                                            aria-describedby="MaterialButton-addon2">
                                         <div class="input-group-append">
                                             <a class="btn btn-md deep-orange white-text m-0 px-3" type="button"
-                                                id="comment{{@index}}" onclick="postComment('{{_id}}','{{@index}}')">Post</a>
+                                                id="comment{{@index}}"
+                                                onclick="postComment('{{_id}}','{{@index}}')">Post</a>
                                         </div>
                                     </div>
                                 </div>
@@ -197,7 +196,8 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <button class="btn deep-orange mt-1 white-text" onclick="validateChangePassword()">Change Password&nbsp
+                        <button class="btn deep-orange mt-1 white-text" onclick="validateChangePassword()">Change
+                            Password&nbsp
                             <i class="fas fa-unlock"></i></button>
                     </div>
                     <br>
@@ -221,7 +221,10 @@
                 </div>
                 <div class="modal-body">
                     <form class="border border-orange p-5" enctype="multipart/form-data">
-
+                        <div class="md-form">
+                            <textarea id="user_bio" class="md-textarea form-control" rows="3">{{pageData.user.bio}}</textarea>
+                            <label for="user_bio">Bio</label>
+                        </div>
                         <input class="form-control mb-4" id="user_name" type="text" placeholder="Name"
                             value="{{pageData.user.name}}">
 
@@ -245,7 +248,7 @@
                         <input class="form-control mb-4" id="user_contact" type="text" placeholder="Contact"
                             value="{{pageData.user.contact_number}}">
 
-                        <input class="form-control mb-4" id="user_gradYear" type="text" placeholder="Graduation Year"
+                        <input class="form-control mb-4" id="user_gradYear" disabled type="text" placeholder="Graduation Year"
                             value="{{pageData.user.graduation_year}}">
 
                     </form>
@@ -253,7 +256,8 @@
                 <p id="update-error"></p>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-deep-orange" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn deep-orange white-text" onclick="updateProfile()">Save changes</button>
+                    <button type="button" class="btn deep-orange white-text" onclick="updateProfile()">Save
+                        changes</button>
                 </div>
             </div>
         </div>
