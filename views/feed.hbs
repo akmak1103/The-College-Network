@@ -33,7 +33,9 @@
             <p class="w3-center"><img src="" alt="user_profile_pic" class="w3-circle"></p>
             <hr>
             <p><i class="fa fa-envelope fa-fw w3-margin-right w3-text-theme"></i>{{user.email}}</p>
-            <p><i class="fa fas fa-transgender-alt fa-fw w3-margin-right w3-text-theme"></i>{{#if user.gender}}{{user.gender}}ale{{else}}Gender{{/if}}</p>
+            <p><i
+                class="fa fas fa-transgender-alt fa-fw w3-margin-right w3-text-theme"></i>{{#if user.gender}}{{user.gender}}ale{{else}}Gender{{/if}}
+            </p>
             <p><i class="fa fas fa-university fa-fw w3-margin-right w3-text-theme"></i> {{user.college_name}}</p>
             <p><i class="fa fas fa-graduation-cap fa-fw w3-margin-right w3-text-theme"></i>{{user.graduation_year}}</p>
             <p><i class="fas fa-mobile-alt fa-fw w3-margin-right w3-text-theme"></i>{{user.contact_number}}</p>
@@ -133,7 +135,8 @@
           Please update your profile.
         </div>
         <div class="modal-footer">
-          <button data-toggle="modal" data-target="#updateModal" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
+          <button data-toggle="modal" data-target="#updateModal" type="button" class="btn btn-primary"
+            data-dismiss="modal">Update</button>
         </div>
       </div>
     </div>
@@ -325,23 +328,24 @@
       xmlHttpRequest.setRequestHeader("authorization", getCookie("authorization"));
       document.cookie = ("authorization=; expires = Thu, 01 Jan 1970 00:00:00 GMT");
       xmlHttpRequest.send();
-      document.getElementById("signout_Msg").innerText = JSON.parse(this.responseText).message}
+      document.getElementById("signout_Msg").innerText = JSON.parse(this.responseText).message
+    }
 
-      function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-          }
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
         }
-        return "";
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
       }
+      return "";
+    }
 
     function getUrlVars() {
       var vars = {};
@@ -383,19 +387,19 @@
     }
 
     function updateProfile() {
-      console.log($("#user_name").val());
-      console.log($("#user_gender").val());
-      console.log($("#user_contact").val());
-      console.log($("#user_gradYear").val());
+      var fd = new FormData();
+      var image = $('#user_pic')[0].files[0]
+      fd.append("name", $("#user_name").val())
+      fd.append("gender", $("#user_gender").val())
+      fd.append("contact_number", $("#user_contact").val())
+      fd.append("graduation_year", $("#user_gradYear").val())
+      fd.append('user_pic', image);
       $.ajax('/users/', {
         type: "POST",
         headers: { "authorization": getCookie("authorization") },
-        data: {
-          name: $("#user_name").val(),
-          gender: $("#user_gender").val(),
-          contact_number: $("#user_contact").val(),
-          graduation_year: $("#user_gradYear").val()
-        },
+        contentType: false,
+        processData: false,
+        data: fd,
         success: function (data, status) {
           window.location.reload();
         },
