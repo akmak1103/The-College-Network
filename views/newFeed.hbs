@@ -1,0 +1,261 @@
+<body style="background-color: #212121">
+    <!--Main layout-->
+    <main class="mt-5 pt-5">
+        <div class="container">
+
+            <!--Section: Post-->
+            <section class="mt-4">
+
+                <!--Grid row-->
+                <div class="row">
+
+
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4">
+
+                        <!--Card: Jumbotron-->
+                        <div class="card orange darken-4 mb-4 wow fadeIn">
+
+                            <!-- Content -->
+                            <div class="card-body text-white text-center">
+                                <div class="avatar mx-auto zoom"><img src={{#if pageData.user.user_pic}}
+                                        {{pageData.user.user_pic}} {{else}} '/images/user.webp' {{/if}}
+                                        alt="avatar mx-auto white" class="rounded-circle hoverable img-fluid w-50">
+                                </div>
+                                <br>
+                                <h4 class="mb-4">
+                                    <strong>{{pageData.user.name}}</strong>
+                                </h4>
+                                <p class="mb-4">
+                                    <strong>The most comprehensive tutorial for the Bootstrap 4. Loved by over 500 000
+                                        users. Video
+                                        and written versions available. Create your own, stunning website.</strong>
+                                </p>
+                            </div>
+                            <!-- Content -->
+                        </div>
+                        <!--Card: Jumbotron-->
+
+
+                        <!--Card : Dynamic content wrapper-->
+                        <div class="card mb-4 wow fadeIn">
+                            <!--Card content-->
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><i class="fa fa-envelope fa-fw"></i> &nbsp
+                                    &nbsp{{pageData.user.email}}</li>
+                                <li class="list-group-item"><i class="fa fas fa-transgender-alt fa-fw"></i> &nbsp
+                                    &nbsp{{#if pageData.user.gender}}{{pageData.user.gender}}ale{{else}}Gender{{/if}}
+                                </li>
+                                <li class="list-group-item"><i class="fa fas fa-university fa-fw"></i> &nbsp
+                                    &nbsp{{pageData.user.college_name}}</li>
+                                <li class="list-group-item"><i class="fa fas fa-graduation-cap fa-fw"></i> &nbsp
+                                    &nbsp{{pageData.user.graduation_year}}</li>
+                                <li class="list-group-item"><i class="fa fas fa-mobile-alt fa-fw"></i> &nbsp
+                                    &nbsp{{pageData.user.contact_number}}</li>
+                            </ul>
+
+                        </div>
+                        <!--/.Card : Dynamic content wrapper-->
+                        <button type="button" data-toggle="modal" data-target="#updateModal"
+                            class="btn btn-outline-deep-orange btn-block">Update Profile</button>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-md-8">
+                        <div class="mb-4">
+                            <div class="form-group shadow-textarea" style="margin-top:0em !important;">
+                                <textarea class="form-control z-depth-1 pt-3" id="createPost" rows="3"
+                                    placeholder="What is on your mind today...."></textarea>
+                            </div>
+                            <button type="button" class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2">Add
+                                files</button>
+                            <button type="button"
+                                class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2">Post</button>
+                        </div>
+                        <hr class="white mb-5">
+
+                        {{#each pageData.posts}}
+                        <!-- Card Wider -->
+                        <div class="card card-cascade mb-5 wider">
+                            {{#if image}}
+                            <!-- Card image -->
+                            <div class="view view-cascade overlay zoom">
+                                <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/photo6.jpg"
+                                    alt="Card image cap" style="height: 250px;">
+                                <a href="#!">
+                                    <div class="mask rgba-white-slight"></div>
+                                </a>
+                            </div>{{/if}}
+
+                            <!-- Card content -->
+                            <div class="card-body card-body-cascade pb-0">
+
+                                <!-- Title -->
+                                <h4 class="card-title"><strong>{{postedBy.name}}</strong></h4>
+                                <!-- Text -->
+                                <p class="card-text">{{caption}}</p>
+
+                                <a class="btn danger-color-dark font-weight-bold mb-4 btn-outline-danger waves-effect"
+                                    id="likebutton{{@index}}" onclick="likePost('{{_id}}','{{@index}}')"
+                                    style="border-radius: 10px; padding: 7px 25px;font-size: 14px;"><i
+                                        class="fa fa-thumbs-up">&nbsp;</i><span
+                                        id="likes{{@index}}">{{likes}}</span>&nbsp&nbspLikes</a>
+                            </div>
+                            <!--Comments-->
+                            <div class="card card-comments wow fadeIn">
+                                <div class="card-header pr-5 font-weight-bold">&nbsp;Comments</div>
+                                <div class="card-body">
+                                    <div class="media d-block mt-0">
+                                        {{#each comments}}
+                                        <div class="media-body text-center mb-2 text-md-left ml-0 d-inline-block">
+                                            &nbsp;&nbsp;<span
+                                                class="mt-0 font-weight-bold">{{author}}:&nbsp;&nbsp;</span>{{data}}
+                                        </div><br>{{/each}}
+                                    </div>
+                                    <div class="md-form input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Add your comment"
+                                            aria-label="Recipient's username" aria-describedby="MaterialButton-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-md deep-orange white-text m-0 px-3" type="button"
+                                                id="MaterialButton-addon2">Post</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.Comments-->
+                        </div>
+                        <!-- Card Wider -->
+                        {{/each}}
+
+                    </div>
+                    <!--Grid column-->
+
+                </div>
+                <!--Grid row-->
+
+            </section>
+            <!--Section: Post-->
+
+        </div>
+    </main>
+    <!--Main layout-->
+
+    <div class="modal fade" id="verifiedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog .modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Email Verified</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Congratulations! Your account email address has been successfully verified. Welcome to the COLLEGE
+                    NETWORK.
+                    Please update your profile.
+                </div>
+                <div class="modal-footer">
+                    <button data-toggle="modal" data-target="#updateModal" type="button" class="btn btn-primary"
+                        data-dismiss="modal">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="changePassModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog cascading-modal modal-avatar modal-md" role="document">
+            <!--Content-->
+            <div class="modal-content">
+
+                <!--Header-->
+                <div class="modal-header">
+                    <img src="images/pass.jpg" alt="avatar" class="rounded-circle img-responsive">
+                </div>
+                <!--Body-->
+                <div class="modal-body text-center mb-1">
+
+                    <h5 class="mt-1 mb-2">{{user.name}}</h5>
+
+                    <div class="md-form ml-0 mr-0">
+                        <input type="password" id="old-pass" class="form-control form-control-md validate ml-0">
+                        <label id="label-old-pass" for="old-pass" class="ml-0">Old password</label>
+                    </div>
+
+                    <div class="md-form ml-0 mr-0">
+                        <input type="password" id="new-pass" class="form-control form-control-md validate ml-0">
+                        <label id="label-new-pass" for="new-pass" class="ml-0">New password</label>
+                    </div>
+
+                    <div class="md-form ml-0 mr-0">
+                        <input type="password" id="new-pass-2" class="form-control form-control-md validate ml-0">
+                        <label id="label-new-pass-2" for="new-pass-2" class="ml-0">Confirm new password</label>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn deep-orange mt-1 white-text" onclick="validateChangePassword()">Change Password&nbsp
+                            <i class="fas fa-unlock"></i></button>
+                    </div>
+                    <br>
+                    <p id="change-pass-error" style="text-align: center;"></p>
+                </div>
+
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+
+    <div class="modal fade left" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-full-height modal-left" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Update Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="border border-orange p-5" enctype="multipart/form-data">
+
+                        <input class="form-control mb-4" id="user_name" type="text" placeholder="Name"
+                            value="{{pageData.user.name}}">
+
+                        <input class="form-control mb-4" id="user_email" disabled type="email" placeholder="Email"
+                            value="{{pageData.user.email}}">
+
+                        <label for="user_gender">Gender</label>
+                        <select class="browser-default custom-select mb-4" id="user_gender">
+                            <option value="M">Male</option>
+                            <option value="Fem">Female</option>
+                        </select>
+
+                        <div class="input-group mb-4">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="user_pic" id="user_pic"
+                                    aria-describedby="user_pic">
+                                <label class="custom-file-label" for="user_pic">Profile Picture</label>
+                            </div>
+                        </div>
+
+                        <input class="form-control mb-4" id="user_contact" type="text" placeholder="Contact"
+                            value="{{pageData.user.contact_number}}">
+
+                        <input class="form-control mb-4" id="user_gradYear" type="text" placeholder="Graduation Year"
+                            value="{{pageData.user.graduation_year}}">
+
+                    </form>
+                </div>
+                <p id="update-error"></p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-deep-orange" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn deep-orange white-text" onclick="updateProfile()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

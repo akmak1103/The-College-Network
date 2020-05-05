@@ -5,7 +5,7 @@ const Token = require ('../models/token.model');
 exports.feed = async function (req, res) {
   var promises = [];
   var data = {};
-  if (req.cookies.authorization) {
+  if (req.cookies.authorization && req.cookies.authorization!="null") {
     Token.findById (req.cookies.authorization, function (err, token) {
       if (err) res.status (404).json ({msg: 'Internal Server Error'});
       User.findById (token.user, function (error, newUser) {
@@ -82,7 +82,7 @@ exports.feed = async function (req, res) {
           promises.push (feedPromise);
           Promise.all (promises)
             .then (() => {
-              res.render ('feed', {
+              res.render ('newFeed', {
                 title: 'Netowrk Feed',
                 pageData: data,
                 jsFile: '/javascripts/feed.js',
@@ -99,7 +99,7 @@ exports.feed = async function (req, res) {
 };
 
 exports.homepage = function (req, res) {
-  if (req.cookies.authorization) {
+  if (req.cookies.authorization && req.cookies.authorization!="null") {
     res.redirect ('http://localhost:3000/feed');
   }
   res.render ('homepage', {

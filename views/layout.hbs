@@ -34,7 +34,7 @@
 <body>
   {{#if pageData.user}}
   <!--Navbar -->
-  <nav class="mb-1 navbar navbar-expand-sm navbar-dark unique-color lighten-1">
+  <nav class="mb-1 navbar navbar-expand-sm navbar-dark">
     <a class="navbar-brand" href="#">
       <img src="/images/logo.png" height="40" alt="tcn logo"><strong style="font-weight: bold;"> &nbspCollege
         Network</strong>
@@ -48,8 +48,8 @@
         <li class="nav-item avatar dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
-            <img src={{#if pageData.user.user_pic}} {{pageData.user.user_pic}} {{else}} '/images/user.webp' {{/if}} class="rounded-circle z-depth-0"
-              alt="avatar image" style="height: 35px;">
+            <img src={{#if pageData.user.user_pic}} {{pageData.user.user_pic}} {{else}} '/images/user.webp' {{/if}}
+              class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
           </a>
           <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
             aria-labelledby="navbarDropdownMenuLink-55">
@@ -93,13 +93,12 @@
   {{/if}}
   {{{body}}}
   <!-- Footer -->
-  {{#if pageData.user}}  <footer class="page-footer font-small unique-color">
-    {{else}} <footer class="page-footer font-small transparent"></footer> {{/if}}
-    <!-- Copyright -->
-    <div class="footer-copyright text-center py-2" style="color: white;">© 2020 Copyright:
-      <a href="" style="color: white;">The College Network</a>
-    </div>
-    <!-- Copyright -->
+  <footer class="page-footer font-small transparent"></footer>
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-2" style="color: white;">© 2020 Copyright:
+    <a href="" style="color: white;">The College Network</a>
+  </div>
+  <!-- Copyright -->
   </footer>
   <!-- Footer -->
 </body>

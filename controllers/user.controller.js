@@ -138,25 +138,29 @@ exports.resendVerifyEmail = async function (req, res) {
 
 exports.resendEmail = function (req, res) {
   console.log ('Inside controller');
-  Token.findById (req.cookies.authorization, function (err, result) {
-    if (err) result.status (500).json ({msg: err});
-    User.findById (result.user, async function (error, user) {
-      if (error) result.status (500).json ({msg: error});
-      userhash = await UserHash.findOne ({user_id: user._id});
-      if (!userhash) {
-        console.log ('Hash not found in DB');
-        res.json ({msg: 'Error in sending link. Contact Admin'});
-      } else {
-        sendEmail (userhash.hash, user.email, 0);
-        var token = new Token ({user: user._id});
-        token = await token.save ();
-        res.header ('authorization', token._id);
-        res
-          .status (200)
-          .send ({msg: 'Verification Email has been sent again.'});
-      }
+  if (req.cookies.authorization=="null" || !req.cookies.authorization) {
+    res.send ({msg: 'Unauthorized !!'});
+  } else {
+    Token.findById (req.cookies.authorization, function (err, result) {
+      if (err) result.status (500).json ({msg: err});
+      User.findById (result.user, async function (error, user) {
+        if (error) result.status (500).json ({msg: error});
+        userhash = await UserHash.findOne ({user_id: user._id});
+        if (!userhash) {
+          console.log ('Hash not found in DB');
+          res.json ({msg: 'Error in sending link. Contact Admin'});
+        } else {
+          sendEmail (userhash.hash, user.email, 0);
+          var token = new Token ({user: user._id});
+          token = await token.save ();
+          res.header ('authorization', token._id);
+          res
+            .status (200)
+            .send ({msg: 'Verification Email has been sent again.'});
+        }
+      });
     });
-  });
+  }
 };
 
 exports.verifyUser = async function (req, res) {

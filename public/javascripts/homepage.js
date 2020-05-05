@@ -62,17 +62,17 @@ function validateResendEmail () {
   resendEmail ();
 }
 
-function resendEmail () {
+function resendEmail (user_email) {
   $.ajax ('/users/resendVerifyEmail', {
     type: 'POST',
-    data: {email: $ ('#registeredEmail').val ()},
+    data: {email: user_email},
     success: function (data, status, jqXhr) {
-      $ ('#resend-error').text (data.msg);
+      $ ('#error').text (data.msg);
       document.cookie =
         'authorization=' + jqXhr.getResponseHeader ('authorization');
     },
     error: function (jqXhr, textStatus, errorMessage) {
-      $ ('#resend-error').text ('Error ' + errorMessage);
+      $ ('#error').text ('Error ' + errorMessage);
     },
   });
 }
@@ -99,10 +99,16 @@ function signIn () {
   xmlHttpRequest.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
+        if (this.getResponseHeader ('authorization')=="null"){
+          console.log("Server RESPONSE ON SIGN IN"+this.response.sendEmail)
+          console.log("Email passing to send verify link: "+email)
+          resendEmail(email);
+        }
+        else{
         document.cookie =
           'authorization=' + this.getResponseHeader ('authorization');
         console.log ('Signin successful!');
-        window.location = '/feed';
+        window.location = '/feed';}
       } else {
         document.getElementById ('error').innerText = JSON.parse (
           this.responseText
