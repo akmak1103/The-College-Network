@@ -46,29 +46,6 @@
         </div>
         <br>
 
-        <!-- Accordion -->
-        <div class="w3-card w3-round">
-          <div class="w3-white">
-            <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-left-align unique-color"
-              style="color: white;"><i class="fa fa-circle-o-notch fa-fw w3-margin-right"></i>Saved Posts</button>
-            <hr>
-            <div id="Demo1" class="w3-hide w3-container">
-              {{#each user.savedPosts}}<p>{{this.caption}}</p>{{/each}}
-            </div>
-          </div>
-        </div>
-        <br>
-
-        <!-- Interests -->
-        <div class="w3-card w3-round w3-white w3-hide-small">
-          <div class="w3-container">
-            <div style="padding-top: 20px;">Interests</div>
-            <hr>
-            <p>{{#each user.interests}}
-              <span class="w3-tag w3-small w3-theme-l5">{{this}}</span>{{/each}}
-            </p>
-          </div>
-        </div>
         <br>
         <a href="#" data-toggle="modal" data-target="#updateModal">
           <div class="w3-card w3-round w3-white w3-hide-small">
@@ -114,8 +91,6 @@
 
           <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>
              Comment</button>
-          <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fas fa-save"></i>
-             Save</button>
         </div>{{/each}}
 
         <!-- End Middle Column -->
@@ -243,18 +218,6 @@
     </div>
   </div>
   <script>
-    // Accordion
-    function myFunction(id) {
-      var x = document.getElementById(id);
-      if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-        x.previousElementSibling.className += " w3-theme-d1";
-      } else {
-        x.className = x.className.replace("w3-show", "");
-        x.previousElementSibling.className =
-          x.previousElementSibling.className.replace(" w3-theme-d1", "");
-      }
-    }
 
     function validateChangePassword() {
       if (!($("#old-pass").val().length > 7)) {
