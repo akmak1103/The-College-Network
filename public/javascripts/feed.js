@@ -225,6 +225,41 @@ async function updatePhoto () {
   });
 }
 
+
+function postComment (postID, index) {
+
+  $.ajax ('/post/comment/' + postID, {
+    type: 'POST',
+    data:{
+      commentData: $('#commentData'+index).val()
+    },
+    headers: {authorization: getCookie ('authorization')},
+    success: function (data, status) {
+      toastr.options = {
+        newestOnTop: true,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: 1,
+        hideDuration: 1000,
+        timeOut: 1000,
+        extendedTimeOut: 1000,
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+      };
+      toastr.warning ('<i class="fas fa-pen"></i> &nbsp;Commented!');
+      setTimeout ('window.location.reload ();', 2000);
+    },
+    error: function (jqXhr, textStatus, errorMessage) {
+      console.log (data.msg);
+    },
+  });
+}
+
+
+
 window.onload = function () {
   var newUser = getUrlVars ()['newUser'];
   if (newUser) {

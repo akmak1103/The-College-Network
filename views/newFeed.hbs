@@ -115,11 +115,11 @@
                                         </div><br>{{/each}}
                                     </div>
                                     <div class="md-form input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Add your comment"
+                                        <input type="text" class="form-control" placeholder="Add your comment" id="commentData{{@index}}"
                                             aria-label="Recipient's username" aria-describedby="MaterialButton-addon2">
                                         <div class="input-group-append">
-                                            <button class="btn btn-md deep-orange white-text m-0 px-3" type="button"
-                                                id="MaterialButton-addon2">Post</button>
+                                            <a class="btn btn-md deep-orange white-text m-0 px-3" type="button"
+                                                id="comment{{@index}}" onclick="postComment('{{_id}}','{{@index}}')">Post</a>
                                         </div>
                                     </div>
                                 </div>

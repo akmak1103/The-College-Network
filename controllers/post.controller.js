@@ -16,7 +16,7 @@ exports.like = function (req, res) {
 exports.comment = function (req, res) {
   Post.findById (req.params.id).exec (async function (err, post) {
     if (err) res.status (404).send (err);
-    post.comments.push ({author: req.token.user, data: req.body.data});     //push the new comment document in comments array of the post
+    post.comments.push ({author: req.token.user, data: req.body.commentData});     //push the new comment document in comments array of the post
     await post.save (function (err, result) {
       if (err) res.status (500).send (err);
       res.status (200).send ({msg: 'Comment posted'});
