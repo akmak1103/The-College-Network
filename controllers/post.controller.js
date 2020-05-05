@@ -23,13 +23,3 @@ exports.comment = function (req, res) {
     });
   });
 };
-
-exports.save = function (req, res) {
-  User.findById (req.token.user, async function (err, user) {
-    user.savedPosts.push (req.params.id);       //push the id of post in savedPosts array
-    await user.save (function (err, result) {
-      if (err) res.status (500).send (err);
-      res.status (200).send ({msg: 'Post Saved'});
-    });
-  });
-};

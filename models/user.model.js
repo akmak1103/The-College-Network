@@ -9,8 +9,8 @@ const User = new mongoose.Schema({
     college_name:{type:String},
     password:{type:String},
     isActive:{type:Boolean,default:false},
-    savedPosts:[{type:mongoose.Schema.Types.ObjectId,ref:'Post'}],
-    interests:[{type:String}],
+    likedPosts:[{type:mongoose.Schema.Types.ObjectId,ref:'Post'}],
+    bio:{type:String},
     user_pic: {type:String}
 })
 
