@@ -78,7 +78,7 @@ function sendEmail (hash, email, type) {
   });
   var mailOptions;
   if (type == 0) {
-    let link = 'http://localhost:3000/users/verify/' + hash;
+    let link = 'http://18.222.220.88:3000/users/verify/' + hash;
     mailOptions = {
       to: email,
       subject: '[The College Network] Verify your Email Address',
