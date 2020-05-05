@@ -4,7 +4,7 @@
 <head>
   <title>{{title}}</title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
-  <link rel="stylesheet" href="/stylesheets/homepage.css" />
+  <link rel="stylesheet" href={{cssFile}} />
   <link rel="stylesheet" href="/stylesheets/toastr.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
@@ -28,10 +28,11 @@
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
   <script type="text/javascript" src="/javascripts/toastr.js"></script>
+  <script type="text/javascript" src={{{jsFile}}}></script>
 </head>
 
 <body>
-  {{#if user}}
+  {{#if pageData.user}}
   <!--Navbar -->
   <nav class="mb-1 navbar navbar-expand-sm navbar-dark unique-color lighten-1">
     <a class="navbar-brand" href="#">
@@ -47,7 +48,7 @@
         <li class="nav-item avatar dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
-            <img src={{#if user.user_pic}} {{user.user_pic}} {{else}} '/images/user.webp' {{/if}} class="rounded-circle z-depth-0"
+            <img src={{#if pageData.user.user_pic}} {{pageData.user.user_pic}} {{else}} '/images/user.webp' {{/if}} class="rounded-circle z-depth-0"
               alt="avatar image" style="height: 35px;">
           </a>
           <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
@@ -92,7 +93,8 @@
   {{/if}}
   {{{body}}}
   <!-- Footer -->
-  <footer class="page-footer font-small transparent">
+  {{#if pageData.user}}  <footer class="page-footer font-small unique-color">
+    {{else}} <footer class="page-footer font-small transparent"></footer> {{/if}}
     <!-- Copyright -->
     <div class="footer-copyright text-center py-2">© 2020 Copyright:
       <a href="">The College Network</a>
