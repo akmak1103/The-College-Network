@@ -201,7 +201,7 @@ function updateProfile () {
         hideMethod: 'fadeOut',
       };
       toastr.success ('<i class="fas fa-check-double"></i> Profile Updated!');
-      setTimeout ('window.location.reload ();', 2000);
+      setTimeout ('window.location = \'/feed\'', 2000);
     },
     error: function (jqXhr, textStatus, errorMessage) {
       $ ('#update-error').text ('Error ' + errorMessage);
