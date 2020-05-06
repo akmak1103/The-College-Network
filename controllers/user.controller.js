@@ -373,7 +373,8 @@ exports.createpost = async function (req, res) {
 };
 
 exports.postPhoto = async function(req,res){
-  req.body.image = 'upload/' + req.file.filename;
+  if (req.file.filename)
+  {req.body.image = 'upload/' + req.file.filename;}
   req.body.postedBy = req.token.user;
   await Post.create (req.body).then((result) => {
     res.status (200).send ({msg: 'Post created', post: result});
