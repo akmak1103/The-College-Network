@@ -63,6 +63,7 @@ function validateResendEmail () {
 }
 
 function resendEmail (user_email) {
+  console.log ('Function has been called.');
   $.ajax ('/users/resendVerifyEmail', {
     type: 'POST',
     data: {email: user_email},
@@ -99,21 +100,18 @@ function signIn () {
   xmlHttpRequest.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        if (this.getResponseHeader ('authorization')=="null"){
-          console.log("Server RESPONSE ON SIGN IN"+this.response.sendEmail)
-          console.log("Email passing to send verify link: "+email)
-          resendEmail(email);
-        }
-        else{
         document.cookie =
           'authorization=' + this.getResponseHeader ('authorization');
         console.log ('Signin successful!');
-        window.location = '/feed';}
-      } else {
-        document.getElementById ('error').innerText = JSON.parse (
-          this.responseText
-        ).msg;
+        window.location = '/feed';
       }
+    }
+    if (this.status === 401) {
+      resendEmail (email);
+    } else {
+      document.getElementById ('error').innerText = JSON.parse (
+        this.responseText
+      ).msg;
     }
   };
   xmlHttpRequest.open ('POST', '/users/signin', true);

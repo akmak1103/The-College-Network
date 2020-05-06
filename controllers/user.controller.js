@@ -105,12 +105,13 @@ function sendEmail (hash, email, type) {
 }
 
 exports.resendVerifyEmail = async function (req, res) {
+  var user;
   if (!req.body.email) {
     res.json ({
       msg: 'Enter valid email address',
     });
   } else {
-    var user = await User.findOne ({email: req.body.email});
+    user = await User.findOne ({email: req.body.email});
     if (user == null || user == undefined) {
       res.json ({
         msg: 'Please sign up first!',
@@ -225,7 +226,7 @@ exports.signin = async function (req, res) {
           });
         }
       } else {
-        res.status (401);
+        res.status(401)
         res.json ({msg: 'Please verify your email address'});
       }
     }
