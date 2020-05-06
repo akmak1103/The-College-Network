@@ -172,9 +172,6 @@ function likePost (postID, index) {
 }
 
 function updateProfile () {
-  if ($ ('#user_pic').val ()) {
-    updatePhoto ();
-  }
   $.ajax ('/users/', {
     type: 'POST',
     headers: {authorization: getCookie ('authorization')},
@@ -201,7 +198,7 @@ function updateProfile () {
         hideMethod: 'fadeOut',
       };
       toastr.success ('<i class="fas fa-check-double"></i> Profile Updated!');
-      setTimeout ('window.location = \'/feed\'', 2000);
+      setTimeout ("window.location = '/feed'", 2000);
     },
     error: function (jqXhr, textStatus, errorMessage) {
       $ ('#update-error').text ('Error ' + errorMessage);
@@ -209,18 +206,41 @@ function updateProfile () {
   });
 }
 
-async function updatePhoto () {
+function updatePhoto () {
   var fd = new FormData ();
-  var image = $ ('#user_pic')[0].files[0];
-  fd.append ('user_pic', image);
-  await $.ajax ('/users/updatePic', {
+  if ($ ('#user_pic').val () != '') {
+    var image = $ ('#user_pic')[0].files[0];
+    fd.append ('user_pic', image);
+  }
+  fd.append ('name', $ ('#user_name').val ());
+  fd.append ('gender', $ ('#user_gender').val ());
+  fd.append ('bio', $ ('#user_bio').val ());
+  fd.append ('contact_number', $ ('#user_contact').val ());
+  fd.append ('graduation_year', $ ('#user_gradYear').val ());
+  $.ajax ('/users/updatePic', {
     type: 'POST',
     contentType: false,
     processData: false,
     headers: {authorization: getCookie ('authorization')},
     data: fd,
     success: function (data, status) {
-      window.location.reload ();
+      $ ('#updateModal').modal ('hide');
+      toastr.options = {
+        newestOnTop: true,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: 1,
+        hideDuration: 1000,
+        timeOut: 1000,
+        extendedTimeOut: 1000,
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+      };
+      toastr.success ('<i class="fas fa-check-double"></i> Profile Updated!');
+      setTimeout ("window.location = '/feed'", 2000);
     },
     error: function (jqXhr, textStatus, errorMessage) {
       $ ('#update-error').text ('Error ' + errorMessage);
@@ -306,7 +326,7 @@ function postPhoto () {
   var fd = new FormData ();
   var imageUploaded = $ ('#image')[0].files[0];
   fd.append ('image', imageUploaded);
-  fd.append('caption',$("#postCaption").val())
+  fd.append ('caption', $ ('#postCaption').val ());
   $.ajax ('/users/postPhoto', {
     type: 'POST',
     contentType: false,

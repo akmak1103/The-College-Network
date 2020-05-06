@@ -328,7 +328,8 @@ exports.update = function (req, res) {
 };
 
 exports.updatePhoto = function (req, res) {
-  req.body.user_pic = 'upload/' + req.file.filename;
+  if (!(req.file == undefined))
+  {req.body.user_pic = 'upload/' + req.file.filename;}
   var user = User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});
@@ -336,7 +337,7 @@ exports.updatePhoto = function (req, res) {
     //update the details of user which have been changed
     user.updateOne (req.body, function (err, result) {
       if (err) res.status (401).send ({msg: 'Update Failed'});
-      res.status (200).send ({msg: 'User details updated successfully!'});
+      res.send({msg:"Successfully Updated!"});
     });
   }
 };
