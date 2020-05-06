@@ -372,6 +372,16 @@ exports.createpost = async function (req, res) {
   });
 };
 
+exports.postPhoto = async function(req,res){
+  req.body.image = 'upload/' + req.file.filename;
+  req.body.postedBy = req.token.user;
+  await Post.create (req.body).then((result) => {
+    res.status (200).send ({msg: 'Post created', post: result});
+  }).catch((err) => {
+    if (err) res.status (500).send ({msg: 'Post not created.'});
+  }); 
+}
+
 exports.myposts = function (req, res) {
   Post.find ({postedBy: req.token.user}).exec (function (err, records) {
     if (err) res.status (404).send ({msg: 'Posts could not be found!'});

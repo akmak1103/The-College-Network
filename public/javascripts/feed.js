@@ -71,18 +71,6 @@ function changePass () {
   });
 }
 
-// function getCookie (c_name) {
-//   if (document.cookie.length > 0) {
-//     c_start = document.cookie.indexOf (c_name + '=');
-//     if (c_start != -1) {
-//       c_start = c_start + c_name.length + 1;
-//       c_end = document.cookie.indexOf (';', c_start);
-//       if (c_end == -1) c_end = document.cookie.length;
-//       return unescape (document.cookie.substring (c_start, c_end));
-//     }
-//   }
-//   return '';
-// }
 function signOut () {
   var xmlHttpRequest = new XMLHttpRequest ();
   xmlHttpRequest.onreadystatechange = function () {
@@ -222,7 +210,6 @@ function updateProfile () {
 }
 
 async function updatePhoto () {
-  console.log ('Inside update photo');
   var fd = new FormData ();
   var image = $ ('#user_pic')[0].files[0];
   fd.append ('user_pic', image);
@@ -273,33 +260,64 @@ function postComment (postID, index) {
 }
 
 function doPost () {
-  console.log ($ ('#postCaption').val ());
-  $.ajax ('/users/post', {
+  if ($ ('#image').val ()) {
+    postPhoto ();
+  } else {
+    console.log ($ ('#postCaption').val ());
+    if ($ ('#postCaption').val ().length > 20) {
+      $.ajax ('/users/post', {
+        type: 'POST',
+        data: {
+          caption: $ ('#postCaption').val (),
+        },
+        headers: {authorization: getCookie ('authorization')},
+        success: function (data, status) {
+          toastr.options = {
+            newestOnTop: true,
+            positionClass: 'toast-bottom-right',
+            preventDuplicates: false,
+            onclick: null,
+            showDuration: 1,
+            hideDuration: 1000,
+            timeOut: 1000,
+            extendedTimeOut: 1000,
+            showEasing: 'swing',
+            hideEasing: 'linear',
+            showMethod: 'fadeIn',
+            hideMethod: 'fadeOut',
+          };
+          toastr.error (
+            '<i class="far fa-list-alt"></i> &nbsp;Your post is live!'
+          );
+          setTimeout ('window.location.reload ();', 2000);
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+          console.log (data.msg);
+        },
+      });
+    } else {
+      alert ('Please type at least 20 characters.');
+    }
+  }
+}
+
+function postPhoto () {
+  console.log ('Calling post Photo();' + $ ('#image').val ());
+  var fd = new FormData ();
+  var imageUploaded = $ ('#image')[0].files[0];
+  fd.append ('image', imageUploaded);
+  fd.append('caption',$("#postCaption").val())
+  $.ajax ('/users/postPhoto', {
     type: 'POST',
-    data: {
-      caption: $ ('#postCaption').val (),
-    },
+    contentType: false,
+    processData: false,
     headers: {authorization: getCookie ('authorization')},
+    data: fd,
     success: function (data, status) {
-      toastr.options = {
-        newestOnTop: true,
-        positionClass: 'toast-bottom-right',
-        preventDuplicates: false,
-        onclick: null,
-        showDuration: 1,
-        hideDuration: 1000,
-        timeOut: 1000,
-        extendedTimeOut: 1000,
-        showEasing: 'swing',
-        hideEasing: 'linear',
-        showMethod: 'fadeIn',
-        hideMethod: 'fadeOut',
-      };
-      toastr.error ('<i class="far fa-list-alt"></i> &nbsp;Your post is live!');
-      setTimeout ('window.location.reload ();', 2000);
+      window.location.reload ();
     },
     error: function (jqXhr, textStatus, errorMessage) {
-      console.log (data.msg);
+      $ ('#update-error').text ('Error ' + errorMessage);
     },
   });
 }

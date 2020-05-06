@@ -53,6 +53,13 @@ router.post (
   user_controller.updatePhoto
 );
 
+router.post (
+  '/postPhoto',
+  auth,
+  upload.single ('image'),
+  user_controller.postPhoto
+);
+
 router.get ('/feed', auth, user_controller.feed); //working
 
 router.post ('/post', auth, user_controller.createpost); //working

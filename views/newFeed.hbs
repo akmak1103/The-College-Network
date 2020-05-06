@@ -67,10 +67,17 @@
                                 <textarea class="form-control z-depth-1 pt-3" id="postCaption" rows="3"
                                     placeholder="What is on your mind today...."></textarea>
                             </div>
-                            <button type="button" class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2">Add
-                                files</button>
-                            <button type="button" class="btn btn-light font-weight-bold pl-3 pr-3 pt-2 pb-2"
-                                onclick="doPost()">Post</button>
+                            <div class="d-flex justify-content-between">
+                                {{!-- <div class="w-75 m-0 p-0"> --}}
+                                    <div class="custom-file w-50 m-1"><form enctype="multipart/form-data">
+                                        <input type="file" class="custom-file-input" id="image" name="image"
+                                            aria-describedby="postImage">
+                                        <label class="custom-file-label" for="image">Choose an Image</label></form>
+                                    {{!-- </div> --}}
+                                </div>
+                                <button type="button" class="btn deep-orange white-text font-weight-bold pl-3 pr-3 pt-2 pb-2"
+                                    onclick="postPhoto()">Post</button>
+                            </div>
                         </div>
                         <hr class="white mb-5">
 
@@ -118,7 +125,7 @@
                                         <div class="input-group-append">
                                             <a class="btn btn-md deep-orange white-text m-0 px-3" type="button"
                                                 id="comment{{@index}}"
-                                                onclick="postComment('{{_id}}','{{@index}}')">Post</a>
+                                                onclick="postComment('{{_id}}','{{@index}}')">Comment</a>
                                         </div>
                                     </div>
                                 </div>
@@ -222,7 +229,8 @@
                 <div class="modal-body">
                     <form class="border border-orange p-5" enctype="multipart/form-data">
                         <div class="md-form">
-                            <textarea id="user_bio" class="md-textarea form-control" rows="3">{{pageData.user.bio}}</textarea>
+                            <textarea id="user_bio" class="md-textarea form-control"
+                                rows="3">{{pageData.user.bio}}</textarea>
                             <label for="user_bio">Bio</label>
                         </div>
                         <input class="form-control mb-4" id="user_name" type="text" placeholder="Name"
@@ -248,8 +256,8 @@
                         <input class="form-control mb-4" id="user_contact" type="text" placeholder="Contact"
                             value="{{pageData.user.contact_number}}">
 
-                        <input class="form-control mb-4" id="user_gradYear" disabled type="text" placeholder="Graduation Year"
-                            value="{{pageData.user.graduation_year}}">
+                        <input class="form-control mb-4" id="user_gradYear" disabled type="text"
+                            placeholder="Graduation Year" value="{{pageData.user.graduation_year}}">
 
                     </form>
                 </div>
