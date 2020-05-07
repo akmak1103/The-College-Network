@@ -249,6 +249,11 @@ function updatePhoto () {
 }
 
 function postComment (postID, index) {
+  if ($ ('#commentData' + index).val () == ''){
+    $ ('#commentData' + index).focus();
+    $ ('#commentData' + index).attr('placeholder','Please type something!')
+  }
+  else
   $.ajax ('/post/comment/' + postID, {
     type: 'POST',
     data: {
