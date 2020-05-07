@@ -4,7 +4,7 @@
 <div id="container">
     <div id="textdiv">
         <h1 style="color: white !important;">{{heading}}</h1>
-        <p style="color: white !important;">{{info}}</p>
+        <p style="color: white !important; text-shadow:1px 15px 30px black;">{{info}}</p>
         <br>
         {{#if home}}
         <a style="color: white;" href="#" data-toggle="modal" data-target="#modalRegisterForm"><button
@@ -12,8 +12,8 @@
         {{else}}
         <a style="color: white;" href="#"><button class="btn btn-light" style="font-size: 18px;"
                 onclick="resendemail()">{{cta}}</button></a>
-                <hr>
-                <p id="resend-msg" style="color: white !important;"></p>
+        <hr>
+        <p id="resend-msg" style="color: white !important;"></p>
         {{/if}}
     </div>
 </div>

@@ -102,7 +102,7 @@ exports.feed = async function (req, res) {
 //render homepage
 exports.homepage = function (req, res) {
   if (req.cookies.authorization && req.cookies.authorization!="null") {
-    res.redirect ('http://localhost:3000/feed');
+    res.redirect ('http://13.233.9.37:3000/feed');
   }
   res.render ('homepage', {
     title: 'The College Network',
