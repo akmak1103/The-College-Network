@@ -4,6 +4,7 @@ const User = require ('../models/user.model');
 
 var liked = true;
 
+//like post if not already liked
 exports.like = async function (req, res) {
   var postId = req.params.id;
   var userId = req.token.user;
@@ -30,6 +31,7 @@ exports.like = async function (req, res) {
   }
 };
 
+//add liked post to user's data
 function mapLikeToUser (postId, userId) {
   User.findById (userId, async function (err, user) {
     user.likedPosts.push (postId); //push the id of post in likedPosts array
@@ -39,6 +41,7 @@ function mapLikeToUser (postId, userId) {
   });
 }
 
+//comment on post
 exports.comment = function (req, res) {
   Post.findById (req.params.id).exec (async function (err, post) {
     if (err) res.status (404).send (err);

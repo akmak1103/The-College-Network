@@ -7,12 +7,12 @@ const College = require ('../models/college.model');
 const Token = require ('../models/token.model');
 const Post = require ('../models/post.model');
 
+//sign up user - map to college/institution - generate hash for verification - send email
 exports.signup = async function (req, res) {
   var existing = await User.findOne ({email: req.body.email});
   if (existing != null) {
     console.log ('Email match');
-    res.status (409);
-    res.json ({
+    res.status (409).json ({
       msg: 'Email ID already exists',
     });
   } else {
@@ -59,8 +59,7 @@ exports.signup = async function (req, res) {
       var token = new Token ({user: user._id});
       token = await token.save ();
       res.header ('authorization', token._id);
-      res.status (200);
-      res.json ({
+      res.status (200).json ({
         msg: 'Account Created Successfully. Verification Email Sent!',
         data: user,
       });
@@ -68,6 +67,7 @@ exports.signup = async function (req, res) {
   }
 };
 
+//send email to user
 function sendEmail (hash, email, type) {
   let smtpTransport = nodemailer.createTransport ({
     service: 'Gmail',
@@ -104,41 +104,8 @@ function sendEmail (hash, email, type) {
   });
 }
 
-exports.resendVerifyEmail = async function (req, res) {
-  var user;
-  if (!req.body.email) {
-    res.json ({
-      msg: 'Enter valid email address',
-    });
-  } else {
-    user = await User.findOne ({email: req.body.email});
-    if (user == null || user == undefined) {
-      res.json ({
-        msg: 'Please sign up first!',
-      });
-    } else {
-      if (user.isActive == true) {
-        res.json ({
-          msg: 'Email is already verified',
-        });
-      }
-    }
-  }
-  userhash = await UserHash.findOne ({user_id: user._id});
-  if (!userhash) {
-    console.log ('Hash not found in DB');
-    res.json ({msg: 'Error in sending link. Contact Admin'});
-  } else {
-    sendEmail (userhash.hash, req.body.email, 0);
-    var token = new Token ({user: user._id});
-    token = await token.save ();
-    res.header ('authorization', token._id);
-    res.status (200).send ({msg: 'Verification Email has been sent again.'});
-  }
-};
-
+//send verification email
 exports.resendEmail = function (req, res) {
-  console.log ('Inside controller');
   if (req.cookies.authorization == 'null' || !req.cookies.authorization) {
     res.send ({msg: 'Unauthorized !!'});
   } else {
@@ -164,12 +131,12 @@ exports.resendEmail = function (req, res) {
   }
 };
 
+//verify user by checking hash in DB
 exports.verifyUser = async function (req, res) {
   await UserHash.findOne ({hash: req.params.hash}, function (err, result) {
     if (err) {
       console.log ('Hash not found in DB');
-      res.status (404);
-      res.json ({msg: 'Account does not exist'});
+      res.status (404).json ({msg: 'Account does not exist'});
     }
     User.findByIdAndUpdate (
       result.user_id,
@@ -188,6 +155,7 @@ exports.verifyUser = async function (req, res) {
   });
 };
 
+//delete hash after verification
 function deleteHash (result) {
   UserHash.findOneAndDelete ({user_id: result.user_id}, (err, result) => {
     if (err) console.log ('Hash could not be deleted');
@@ -195,6 +163,7 @@ function deleteHash (result) {
   });
 }
 
+//sign in user or send verification email if not verified
 exports.signin = async function (req, res) {
   if (!req.body.email) {
     res.status (404);
@@ -204,8 +173,7 @@ exports.signin = async function (req, res) {
   } else {
     var user = await User.findOne ({email: req.body.email});
     if (user == null || user == undefined) {
-      res.status (404);
-      res.json ({
+      res.status (404).json ({
         msg: 'User does not exist',
       });
     } else {
@@ -221,7 +189,7 @@ exports.signin = async function (req, res) {
           });
         } else {
           res.status (403).json ({
-            msg: 'Password does not match!'
+            msg: 'Password does not match!',
           });
         }
       } else {
@@ -231,18 +199,21 @@ exports.signin = async function (req, res) {
   }
 };
 
+//signout user by deleting token from DB
 exports.signout = async function (req, res) {
   var token = await Token.findByIdAndDelete (req.headers['authorization']);
   console.log (token);
   res.status (200).send ({msg: 'Signout success'});
 };
 
+//signout user across all devices
 exports.signoutall = async function (req, res) {
   var tokens = await Token.deleteMany ({user: req.token.user}); //signout user from all the devices
   console.log (tokens);
   res.status (200).send ({message: 'Signout all success'});
 };
 
+//change password
 exports.changePass = async function (req, res) {
   let user = await User.findById (req.token.user);
   if (!user) res.status (404).send ({msg: 'Account does not exist.'});
@@ -262,6 +233,7 @@ exports.changePass = async function (req, res) {
   else res.send ({msg: 'Old password does not match.'});
 };
 
+//reset password to a random generated value
 exports.resetPass = async function (req, res) {
   if (!req.body.email) {
     res.json ({
@@ -294,6 +266,7 @@ exports.resetPass = async function (req, res) {
   }
 };
 
+//generate random password of 8 characters
 function generate_random_password () {
   var pattern_list = 'abcdefghijklmnopqrstuvwxyz123456789';
   var example = '';
@@ -305,6 +278,7 @@ function generate_random_password () {
   return example;
 }
 
+//retrieve user details
 exports.dashboard = async function (req, res) {
   var user = await User.findById (req.token.user).populate ('savedPosts');
   if (!user) {
@@ -312,6 +286,7 @@ exports.dashboard = async function (req, res) {
   } else res.status (200).send (user); //retrieve user details
 };
 
+//update user's profile
 exports.update = function (req, res) {
   var user = User.findById (req.token.user);
   if (!user) {
@@ -325,6 +300,7 @@ exports.update = function (req, res) {
   }
 };
 
+//update user's profile
 exports.updatePhoto = function (req, res) {
   if (!(req.file == undefined)) {
     req.body.user_pic = 'upload/' + req.file.filename;
@@ -341,9 +317,8 @@ exports.updatePhoto = function (req, res) {
   }
 };
 
+// find all the posts postedBy users in current network
 exports.feed = function (req, res) {
-  // find all the posts 'postedBy' users having "college_name:current_user.college_name"
-
   User.findById ({_id: req.token.user})
     .then (current_user => {
       User.find ({college_name: current_user.college_name})
@@ -365,14 +340,7 @@ exports.feed = function (req, res) {
     });
 };
 
-exports.createpost = async function (req, res) {
-  req.body.postedBy = req.token.user;
-  Post.create (req.body, function (err, result) {
-    if (err) res.status (500).send ({msg: 'Post not created.'});
-    res.status (200).send ({msg: 'Post created', post: result});
-  });
-};
-
+//create Post
 exports.postPhoto = async function (req, res) {
   req.body.image = '';
   if (!(req.file == undefined)) {
@@ -386,11 +354,4 @@ exports.postPhoto = async function (req, res) {
     .catch (err => {
       if (err) res.status (500).send ({msg: 'Post not created.'});
     });
-};
-
-exports.myposts = function (req, res) {
-  Post.find ({postedBy: req.token.user}).exec (function (err, records) {
-    if (err) res.status (404).send ({msg: 'Posts could not be found!'});
-    res.status (200).send ({msg: 'Posts of current user:', posts: records});
-  });
 };

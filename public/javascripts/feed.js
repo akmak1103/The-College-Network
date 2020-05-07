@@ -283,49 +283,7 @@ function postComment (postID, index) {
     });
 }
 
-function doPost () {
-  if ($ ('#image').val ()) {
-    postPhoto ();
-  } else {
-    console.log ($ ('#postCaption').val ());
-    if ($ ('#postCaption').val ().length > 20) {
-      $.ajax ('/users/post', {
-        type: 'POST',
-        data: {
-          caption: $ ('#postCaption').val (),
-        },
-        headers: {authorization: getCookie ('authorization')},
-        success: function (data, status) {
-          toastr.options = {
-            newestOnTop: true,
-            positionClass: 'toast-bottom-right',
-            preventDuplicates: false,
-            onclick: null,
-            showDuration: 1,
-            hideDuration: 1000,
-            timeOut: 1000,
-            extendedTimeOut: 1000,
-            showEasing: 'swing',
-            hideEasing: 'linear',
-            showMethod: 'fadeIn',
-            hideMethod: 'fadeOut',
-          };
-          toastr.error (
-            '<i class="far fa-list-alt"></i> &nbsp;Your post is live!'
-          );
-          setTimeout ('window.location.reload ();', 2000);
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-          console.log (data.msg);
-        },
-      });
-    } else {
-      alert ('Please type at least 20 characters.');
-    }
-  }
-}
-
-function postPhoto () {
+function createPost () {
   if ($ ('#postCaption').val () == '' && $ ('#image').val () == '') {
     $ ('#postCaption').focus ();
     $ ('#postCaption').attr (

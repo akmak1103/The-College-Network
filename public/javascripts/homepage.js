@@ -48,36 +48,6 @@ function validateLogin () {
   signIn ();
 }
 
-function validateResendEmail () {
-  var email = $ ('#registeredEmail').val ();
-  atpos = email.indexOf ('@');
-  dotpos = email.lastIndexOf ('.');
-  if (atpos < 1 || dotpos - atpos < 2) {
-    console.log ('inside if');
-    $ ('#label-resendEmail').css ('color', 'red');
-    $ ('#label-resendEmail').text ('Please enter a valid email');
-    $ ('#registeredEmail').focus ();
-    return false;
-  } else $ ('#label-resendEmail').css ('color', 'green');
-  resendEmail ();
-}
-
-function resendEmail (user_email) {
-  console.log ('Function has been called.');
-  $.ajax ('/users/resendVerifyEmail', {
-    type: 'POST',
-    data: {email: user_email},
-    success: function (data, status, jqXhr) {
-      $ ('#error').text (data.msg);
-      document.cookie =
-        'authorization=' + jqXhr.getResponseHeader ('authorization');
-    },
-    error: function (jqXhr, textStatus, errorMessage) {
-      $ ('#error').text ('Error ' + errorMessage);
-    },
-  });
-}
-
 function resendemail () {
   console.log ('This is other function.');
   $.ajax ('/users/resendEmail', {

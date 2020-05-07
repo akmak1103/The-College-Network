@@ -2,6 +2,7 @@ const http = require ('http');
 const User = require ('../models/user.model');
 const Token = require ('../models/token.model');
 
+//fetch user details and all the posts
 exports.feed = async function (req, res) {
   var promises = [];
   var data = {};
@@ -98,6 +99,7 @@ exports.feed = async function (req, res) {
   } else res.redirect ('/');
 };
 
+//render homepage
 exports.homepage = function (req, res) {
   if (req.cookies.authorization && req.cookies.authorization!="null") {
     res.redirect ('http://localhost:3000/feed');
@@ -115,6 +117,7 @@ exports.homepage = function (req, res) {
   });
 };
 
+//render 'Verification Email Sent' page
 exports.emailSent = function (req, res) {
   res.render ('homepage', {
     title: 'Verification Mail Sent',
