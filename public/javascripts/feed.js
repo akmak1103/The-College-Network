@@ -335,7 +335,7 @@ window.onload = function () {
   if (newUser) {
     $ ('#verifiedModal').modal ('show');
   }
-  if($("#userYr").text() == 0){
+  else if ($("#userYr").text() == 0){
     $ ('#updateProfileMessage').modal ('show');
   }
 };
