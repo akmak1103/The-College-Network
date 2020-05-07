@@ -139,7 +139,7 @@ exports.resendVerifyEmail = async function (req, res) {
 
 exports.resendEmail = function (req, res) {
   console.log ('Inside controller');
-  if (req.cookies.authorization=="null" || !req.cookies.authorization) {
+  if (req.cookies.authorization == 'null' || !req.cookies.authorization) {
     res.send ({msg: 'Unauthorized !!'});
   } else {
     Token.findById (req.cookies.authorization, function (err, result) {
@@ -220,14 +220,12 @@ exports.signin = async function (req, res) {
             data: user,
           });
         } else {
-          res.status (401);
-          res.json ({
-            msg: 'Password does not match!',
+          res.status (403).json ({
+            msg: 'Password does not match!'
           });
         }
       } else {
-        res.status(401)
-        res.json ({msg: 'Please verify your email address'});
+        res.status (401).json ({msg: 'Please verify your email address'});
       }
     }
   }
@@ -328,8 +326,9 @@ exports.update = function (req, res) {
 };
 
 exports.updatePhoto = function (req, res) {
-  if (!(req.file == undefined))
-  {req.body.user_pic = 'upload/' + req.file.filename;}
+  if (!(req.file == undefined)) {
+    req.body.user_pic = 'upload/' + req.file.filename;
+  }
   var user = User.findById (req.token.user);
   if (!user) {
     res.status (404).send ({message: 'User not found'});
@@ -337,7 +336,7 @@ exports.updatePhoto = function (req, res) {
     //update the details of user which have been changed
     user.updateOne (req.body, function (err, result) {
       if (err) res.status (401).send ({msg: 'Update Failed'});
-      res.send({msg:"Successfully Updated!"});
+      res.send ({msg: 'Successfully Updated!'});
     });
   }
 };
@@ -353,7 +352,7 @@ exports.feed = function (req, res) {
           if (err) console.log (err);
           Post.find ({postedBy: {$in: userArray}})
             .sort ({updatedAt: -1}) //sort posts by latest updated time
-            .populate({path:'comments.author'})
+            .populate ({path: 'comments.author'})
             .populate ('postedBy')
             .exec (function (err, allPosts) {
               if (err) res.send (err);
@@ -374,17 +373,20 @@ exports.createpost = async function (req, res) {
   });
 };
 
-exports.postPhoto = async function(req,res){
-  req.body.image = "";
-  if (!(req.file == undefined))
-  {req.body.image = 'upload/' + req.file.filename;}
+exports.postPhoto = async function (req, res) {
+  req.body.image = '';
+  if (!(req.file == undefined)) {
+    req.body.image = 'upload/' + req.file.filename;
+  }
   req.body.postedBy = req.token.user;
-  await Post.create (req.body).then((result) => {
-    res.status (200).send ({msg: 'Post created', post: result});
-  }).catch((err) => {
-    if (err) res.status (500).send ({msg: 'Post not created.'});
-  }); 
-}
+  await Post.create (req.body)
+    .then (result => {
+      res.status (200).send ({msg: 'Post created', post: result});
+    })
+    .catch (err => {
+      if (err) res.status (500).send ({msg: 'Post not created.'});
+    });
+};
 
 exports.myposts = function (req, res) {
   Post.find ({postedBy: req.token.user}).exec (function (err, records) {
