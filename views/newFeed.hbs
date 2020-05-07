@@ -20,7 +20,7 @@
                             <div class="card-body text-white text-center">
                                 <div class="avatar mx-auto zoom"><img src={{#if pageData.user.user_pic}}
                                         {{pageData.user.user_pic}} {{else}} '/images/user.webp' {{/if}}
-                                        alt="avatar mx-auto white" class="rounded-circle hoverable img-fluid w-50">
+                                        alt="user-pic" class="rounded-circle hoverable img-fluid w-50">
                                 </div>
                                 <br>
                                 <h4 class="mb-4">
@@ -89,8 +89,8 @@
                         <div class="card card-cascade mb-5 wider">
                             {{#if image}}
                             <!-- Card image -->
-                            <div class="view view-cascade overlay zoom">
-                                <img class="card-img-top" src='{{image}}' alt="Card image cap" style="height: 250px;">
+                            <div class="view view-cascade overlay zoom" style="height: 400px;">
+                                <img class="card-img-top" src='{{image}}' alt="image">
                                 <a href="#!">
                                     <div class="mask rgba-white-slight"></div>
                                 </a>
