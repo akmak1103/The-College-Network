@@ -47,7 +47,8 @@
                                 </li>
                                 <li class="list-group-item"><i class="fa fas fa-university fa-fw"></i> &nbsp
                                     &nbsp{{pageData.user.college_name}}</li>
-                                <li class="list-group-item"><i class="fa fas fa-graduation-cap fa-fw"></i> &nbsp
+                                <li class="list-group-item" id="userYr"><i class="fa fas fa-graduation-cap fa-fw"></i>
+                                    &nbsp
                                     &nbsp{{pageData.user.graduation_year}}</li>
                                 <li class="list-group-item"><i class="fa fas fa-mobile-alt fa-fw"></i> &nbsp
                                     &nbsp{{pageData.user.contact_number}}</li>
@@ -69,13 +70,15 @@
                             </div>
                             <div class="d-flex justify-content-between">
                                 {{!-- <div class="w-75 m-0 p-0"> --}}
-                                    <div class="custom-file w-50 m-1"><form enctype="multipart/form-data">
+                                <div class="custom-file w-50 m-1">
+                                    <form enctype="multipart/form-data">
                                         <input type="file" class="custom-file-input" id="image" name="image"
                                             aria-describedby="postImage">
                                         <label class="custom-file-label" for="image">Choose an Image</label></form>
                                     {{!-- </div> --}}
                                 </div>
-                                <button type="button" class="btn deep-orange white-text font-weight-bold pl-3 pr-3 pt-2 pb-2"
+                                <button type="button"
+                                    class="btn deep-orange white-text font-weight-bold pl-3 pr-3 pt-2 pb-2"
                                     onclick="postPhoto()">Post</button>
                             </div>
                         </div>
@@ -97,9 +100,9 @@
                             <div class="card-body card-body-cascade pb-0">
 
                                 <!-- Title -->
-                                <h4 class="card-title"><strong>{{postedBy.name}}</strong></h4>
+                                <h6 class="card-title"><strong>{{postedBy.name}}</strong></h6>
                                 <!-- Text -->
-                                <p class="card-text">{{caption}}</p>
+                                <p class="card-text black-text">{{caption}}</p>
 
                                 <a class="btn danger-color-dark font-weight-bold mb-4 btn-outline-danger waves-effect"
                                     id="likebutton{{@index}}" onclick="likePost('{{_id}}','{{@index}}')"
@@ -148,15 +151,12 @@
     </main>
     <!--Main layout-->
 
-    <div class="modal fade" id="verifiedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="verifiedModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog .modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Email Verified</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     Congratulations! Your account email address has been successfully verified. Welcome to the COLLEGE
@@ -164,7 +164,25 @@
                     Please update your profile.
                 </div>
                 <div class="modal-footer">
-                    <button data-toggle="modal" data-target="#updateModal" type="button" class="btn btn-primary"
+                    <button data-toggle="modal" data-target="#updateModal" type="button" class="btn white-text amber darken-4"
+                        data-dismiss="modal">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="updateProfileMessage" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog .modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update your profile</h5>
+                </div>
+                <div class="modal-body">
+                    Hey {{pageData.user.name}}! Please take out some time and update your profile.
+                </div>
+                <div class="modal-footer">
+                    <button data-toggle="modal" data-target="#updateModal" type="button" class="btn amber darken-4 white-text"
                         data-dismiss="modal">Update</button>
                 </div>
             </div>
@@ -222,50 +240,50 @@
             <div class="modal-content">
                 <div class="modal-header deep-orange white-text">
                     <h5 class="modal-title font-weight-bold" id="updateModalLabel">Update Profile</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close white-text" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                
-                    <form class="border border-orange p-5" enctype="multipart/form-data">
-                        <div class="md-form">
-                            <textarea id="user_bio" class="md-textarea form-control"
-                                rows="3">{{pageData.user.bio}}</textarea>
-                            <label for="user_bio" >Bio</label>
-                        </div>
-                        <label for="user_bio" style="font-size: smaller;">Name</label>
-                        <input class="form-control mb-4" id="user_name" type="text" placeholder="Name"
-                            value="{{pageData.user.name}}">
-<label for="user_bio" style="font-size: smaller;">Email</label>
-                        <input class="form-control mb-4" id="user_email" disabled type="email" placeholder="Email"
-                            value="{{pageData.user.email}}">
 
-                        <label for="user_bio" style="font-size: smaller;">Gender</label>
-                        <select class="browser-default custom-select mb-4" id="user_gender">
-                            <option value="M">Male</option>
-                            <option value="Fem">Female</option>
-                        </select>
-                        <label for="user_bio" style="font-size: smaller;">Profile Picture</label>
-                        <div class="input-group mb-4">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="user_pic" id="user_pic"
-                                    aria-describedby="user_pic">
-                                <label class="custom-file-label" for="user_pic">Choose an image</label>
-                            </div>
-                        </div>
-<label for="user_bio" style="font-size: smaller;">Contact Number</label>
-                        <input class="form-control mb-4" id="user_contact" type="text" placeholder="Contact"
-                            value="{{pageData.user.contact_number}}">
-<label for="user_bio" style="font-size: smaller;">Graduation Year</label>
-                        <input class="form-control mb-4" id="user_gradYear" type="text"
-                            placeholder="Graduation Year" value="{{pageData.user.graduation_year}}">
+                <form class="border border-orange p-5" enctype="multipart/form-data">
+                    <div class="md-form">
+                        <textarea id="user_bio" class="md-textarea form-control" placeholder="Minimum 20 characters"
+                            rows="3">{{pageData.user.bio}}</textarea>
+                        <label for="user_bio" id="bio_label">Bio</label>
+                    </div>
+                    <label for="user_name" id="name_label" style="font-size: smaller;">Name</label>
+                    <input class="form-control mb-4" id="user_name" type="text" placeholder="Name"
+                        value="{{pageData.user.name}}">
+                    <label for="user_email" style="font-size: smaller;">Email</label>
+                    <input class="form-control mb-4" id="user_email" disabled type="email" placeholder="Email"
+                        value="{{pageData.user.email}}">
 
-                    </form>
-                
+                    <label for="user_gender" style="font-size: smaller;">Gender</label>
+                    <select class="browser-default custom-select mb-4" id="user_gender">
+                        <option value="M">Male</option>
+                        <option value="Fem">Female</option>
+                    </select>
+                    <label for="user_pic" style="font-size: smaller;">Profile Picture</label>
+                    <div class="input-group mb-4">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="user_pic" id="user_pic"
+                                aria-describedby="user_pic">
+                            <label class="custom-file-label" for="user_pic">Choose an image</label>
+                        </div>
+                    </div>
+                    <label for="user_contact" id="contact_label" style="font-size: smaller;">Contact Number</label>
+                    <input class="form-control mb-4" id="user_contact" type="text" placeholder="Contact"
+                        value="{{pageData.user.contact_number}}">
+                    <label for="user_gradYear" id="gradYear_label" style="font-size: smaller;">Graduation Year</label>
+                    <input class="form-control mb-4" id="user_gradYear" type="text" placeholder="Graduation Year"
+                        value="{{pageData.user.graduation_year}}">
+
+                </form>
+
                 <p id="update-error"></p>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-deep-orange" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn deep-orange white-text" onclick="updatePhoto()">Save
+                    <button type="button" class="btn deep-orange white-text" onclick="validateProfile()">Save
                         changes</button>
                 </div>
             </div>

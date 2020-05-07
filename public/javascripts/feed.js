@@ -71,6 +71,41 @@ function changePass () {
   });
 }
 
+function validateProfile()
+{
+  if ($("#user_bio").val().length < 20)
+  {
+    $("#bio_label").text('Minimum 20 characters are required.').css('color','red')
+    $("#user_bio").focus();
+    return false
+  }
+  $("#bio_label").css('color','green')
+  if ($("#user_name").val().length < 1)
+  {
+    $("#name_label").text('Please enter a value.').css('color','red')
+    $("#user_name").focus();
+    return false
+  }
+  $("#name_label").css('color','green')
+  var contact_format = /^\d{10}$/;
+  if ($("#user_contact").val().length !=10 || !($("#user_contact").val().match(contact_format)))
+  {
+    $("#contact_label").text('Please enter ten digits of your contact number.').css('color','red')
+    $("#user_contact").focus();
+    return false
+  }
+  $("#contact_label").css('color','green')
+  var year_format = /^\d{4}$/;
+  if ($("#user_gradYear").val().length !=4 || !($("#user_gradYear").val().match(year_format)))
+  {
+    $("#gradYear_label").text('Please enter a valid year.').css('color','red')
+    $("#user_gradYear").focus();
+    return false
+  }
+  $("#gradYear_label").css('color','green')
+  updateProfile();
+}
+
 function signOut () {
   var xmlHttpRequest = new XMLHttpRequest ();
   xmlHttpRequest.onreadystatechange = function () {
@@ -172,41 +207,6 @@ function likePost (postID, index) {
 }
 
 function updateProfile () {
-  $.ajax ('/users/', {
-    type: 'POST',
-    headers: {authorization: getCookie ('authorization')},
-    data: {
-      name: $ ('#user_name').val (),
-      gender: $ ('#user_gender').val (),
-      bio: $ ('#user_bio').val (),
-      contact_number: $ ('#user_contact').val (),
-    },
-    success: function (data, status) {
-      $ ('#updateModal').modal ('hide');
-      toastr.options = {
-        newestOnTop: true,
-        positionClass: 'toast-bottom-right',
-        preventDuplicates: false,
-        onclick: null,
-        showDuration: 1,
-        hideDuration: 1000,
-        timeOut: 1000,
-        extendedTimeOut: 1000,
-        showEasing: 'swing',
-        hideEasing: 'linear',
-        showMethod: 'fadeIn',
-        hideMethod: 'fadeOut',
-      };
-      toastr.success ('<i class="fas fa-check-double"></i> Profile Updated!');
-      setTimeout ("window.location = '/feed'", 2000);
-    },
-    error: function (jqXhr, textStatus, errorMessage) {
-      $ ('#update-error').text ('Error ' + errorMessage);
-    },
-  });
-}
-
-function updatePhoto () {
   var fd = new FormData ();
   if ($ ('#user_pic').val () != '') {
     var image = $ ('#user_pic')[0].files[0];
@@ -376,5 +376,8 @@ window.onload = function () {
   var newUser = getUrlVars ()['newUser'];
   if (newUser) {
     $ ('#verifiedModal').modal ('show');
+  }
+  if($("#userYr").text() == 0){
+    $ ('#updateProfileMessage').modal ('show');
   }
 };
