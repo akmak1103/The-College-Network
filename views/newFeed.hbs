@@ -220,47 +220,48 @@
         aria-hidden="true">
         <div class="modal-dialog modal-full-height modal-left" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Update Profile</h5>
+                <div class="modal-header deep-orange white-text">
+                    <h5 class="modal-title font-weight-bold" id="updateModalLabel">Update Profile</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                
                     <form class="border border-orange p-5" enctype="multipart/form-data">
                         <div class="md-form">
                             <textarea id="user_bio" class="md-textarea form-control"
                                 rows="3">{{pageData.user.bio}}</textarea>
-                            <label for="user_bio">Bio</label>
+                            <label for="user_bio" >Bio</label>
                         </div>
+                        <label for="user_bio" style="font-size: smaller;">Name</label>
                         <input class="form-control mb-4" id="user_name" type="text" placeholder="Name"
                             value="{{pageData.user.name}}">
-
+<label for="user_bio" style="font-size: smaller;">Email</label>
                         <input class="form-control mb-4" id="user_email" disabled type="email" placeholder="Email"
                             value="{{pageData.user.email}}">
 
-                        <label for="user_gender">Gender</label>
+                        <label for="user_bio" style="font-size: smaller;">Gender</label>
                         <select class="browser-default custom-select mb-4" id="user_gender">
                             <option value="M">Male</option>
                             <option value="Fem">Female</option>
                         </select>
-
+                        <label for="user_bio" style="font-size: smaller;">Profile Picture</label>
                         <div class="input-group mb-4">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" name="user_pic" id="user_pic"
                                     aria-describedby="user_pic">
-                                <label class="custom-file-label" for="user_pic">Profile Picture</label>
+                                <label class="custom-file-label" for="user_pic">Choose an image</label>
                             </div>
                         </div>
-
+<label for="user_bio" style="font-size: smaller;">Contact Number</label>
                         <input class="form-control mb-4" id="user_contact" type="text" placeholder="Contact"
                             value="{{pageData.user.contact_number}}">
-
+<label for="user_bio" style="font-size: smaller;">Graduation Year</label>
                         <input class="form-control mb-4" id="user_gradYear" type="text"
                             placeholder="Graduation Year" value="{{pageData.user.graduation_year}}">
 
                     </form>
-                </div>
+                
                 <p id="update-error"></p>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-deep-orange" data-dismiss="modal">Close</button>
