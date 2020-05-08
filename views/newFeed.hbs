@@ -232,7 +232,7 @@
 
     <div class="modal fade left" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-full-height modal-left" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header deep-orange white-text">
                     <h5 class="modal-title font-weight-bold" id="updateModalLabel">Update Profile</h5>
@@ -240,8 +240,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
-                <form class="border border-orange p-5" enctype="multipart/form-data">
+                <form class="border border-orange p-4" enctype="multipart/form-data">
+                    <div class="avatar mx-auto w-25" style="padding-bottom: 20px!important;"><img
+                            src={{#if pageData.user.user_pic}} {{pageData.user.user_pic}} {{else}} '/images/user.webp'
+                            {{/if}} alt="user-pic" class="rounded-circle hoverable img-fluid">
+                    </div>
                     <div class="md-form">
                         <textarea id="user_bio" class="md-textarea form-control" placeholder="Minimum 20 characters"
                             rows="3">{{pageData.user.bio}}</textarea>
